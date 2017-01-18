@@ -2,75 +2,108 @@
 <html>
 <head>
   <title>Canlis</title>
+  <link rel="stylesheet" href="https://rawgit.com/twbs/bootstrap/v4-dev/dist/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
-  <script type="text/javascript">
+  <script>
+    
+// SETTING KEY
+Stripe.setPublishableKey('pk_test_Gbu2akKhNgGjbKi4LPxOOWqc');
 
-    // SETTING KEY
-    Stripe.setPublishableKey('pk_test_Gbu2akKhNgGjbKi4LPxOOWqc');
+// CREATING SINGLE USE TOKEN
+$(function() {
+  var $form = $('#payment-form');
+  $form.submit(function(event) {
+    // Disable the submit button to prevent repeated clicks:
+    $form.find('.submit').prop('disabled', true);
+    // Request a token from Stripe:
+    Stripe.card.createToken($form, stripeResponseHandler);
+    // Prevent the form from being submitted:
+    return false;
+  });
+});
 
-    // CREATING SINGLE USE TOKEN
-    $(function() {
-      var $form = $('#payment-form');
-      $form.submit(function(event) {
-        // Disable the submit button to prevent repeated clicks:
-        $form.find('.submit').prop('disabled', true);
-        // Request a token from Stripe:
-        Stripe.card.createToken($form, stripeResponseHandler);
-        // Prevent the form from being submitted:
-        return false;
-      });
-    });
+// SENDING FORM 
+function stripeResponseHandler(status, response) {
+  // Grab the form:
+  var $form = $('#payment-form');
 
-    // SENDING FORM 
-    function stripeResponseHandler(status, response) {
-      // Grab the form:
-      var $form = $('#payment-form');
+  if (response.error) { // Problem!
 
-      if (response.error) { // Problem!
+    // Show the errors on the form:
+    $form.find('.payment-errors').text(response.error.message);
+    $form.find('.submit').prop('disabled', false); // Re-enable submission
 
-        // Show the errors on the form:
-        $form.find('.payment-errors').text(response.error.message);
-        $form.find('.submit').prop('disabled', false); // Re-enable submission
+  } else { // Token was created!
 
-      } else { // Token was created!
+    // Get the token ID:
+    var token = response.id;
 
-        // Get the token ID:
-        var token = response.id;
+    // Insert the token ID into the form so it gets submitted to the server:
+    $form.append($('<input type="hidden" name="stripeToken">').val(token));
+    console.log(token);
 
-        // Insert the token ID into the form so it gets submitted to the server:
-        $form.append($('<input type="hidden" name="stripeToken">').val(token));
-        console.log(token);
+    // Submit the form:
+    $form.get(0).submit();
+  }
+};
 
-        // Submit the form:
-        $form.get(0).submit();
-      }
-    };
+// AUTOFILL FOR TESTING
+
+$( document ).ready(function() {
+  $('[data-stripe="name"]').val("Rivers Combover");
+  $('[name="shipping_name"]').val("Sigmund Freud");
+  $('[name="shipping_address_line1"]').val("123 Lois Lane");
+  $('[name="shipping_address_line2"]').val("Suite B");
+  $('[name="shipping_address_city"]').val("Seattle");
+  $('[name="shipping_address_state"]').val("Washington");
+  $('[name="shipping_address_country"]').val("United States");
+  $('[name="shipping_address_postal_code"]').val("98144");
+  $('[name="stripeEmail"]').val("ps@filmschool.com");
+  $('#cc').val("4242424242424242");
+  $('#ccm').val("12");
+  $('#ccy').val("19");
+  $('#cvv').val("123");
+
+  $(".ShippingInformation").hide();
+
+  $('.ShippingSelector').click(function() {
+    if($('#ShipToMe').is(':checked')) { 
+      $(".ShippingInformation").show();
+    }
+    if ($('#ShipToRecipient').is(':checked')) { 
+      $(".ShippingInformation").show();
+    }
+    if ($('#ShipToPickup').is(':checked')) { 
+      $(".ShippingInformation").hide();
+    }
+  });
+  
+
+});
+
   </script>
+  <style>
+    form {
+      padding: 10%;
+    }
+    input {
+      width: 100%;
+      display: block;
+    }
+  </style>
 </head>
 <body>
 
-<h2>Gift Cards</h2>
-
 <form action="/charge" method="POST" id="payment-form">
+<h1>Order A Gift Card</h1>
   <span class="payment-errors"></span>
+  <hr>
   <div class="form-row">
     <label>
-      <span>Email</span>
-      <input type="text" size="20" name="stripeEmail" >
-    </label>
-  </div>
-  <div class="form-row">
-    <label>
-      <span>Name</span>
-      <input type="text" size="20" data-stripe="name">
-    </label>
-  </div>
-  <div class="form-row">
-    <label>
-      <span>Amount</span>
+      <span>Gift Card Amount</span>
       <select name="stripeAmount">
-        <option>Please select an amount</option>
+        <option>Choose...</option>
         <option value="350">Dinner for two — $350</option>
         <option value="450">Dinner for two — $450</option>
         <option value="600">Dinner for four — $600</option>
@@ -78,27 +111,96 @@
       </select>
     </label>
   </div>
-
+  <hr>
+  <div class="form-row">
+    <label>
+      <span>Recipient Name(s)</span>
+      <input type="text" name="shipping_name" >
+    </label>
+  </div>
+  <hr>
+  <div class="form-row">
+    <label class="ShippingSelector">
+      <span>Ship to: </span>
+      <input type="radio" name="group1" value="Customer" id="ShipToMe">Me<br>
+      <input type="radio" name="group1" value="Recipient" id="ShipToRecipient">Recipient(s)<br>
+      <input type="radio" name="group1" value="Pickup" id="ShipToPickup">Pick up at Canlis<br>
+    </label>
+  </div>
+  
+  <div class="ShippingInformation">
+  <hr>
+    <h3>Shipping Information</h3>
+    <div class="form-row">
+      <label>
+        <span>Address</span>
+        <input type="text" name="shipping_address_line1" >
+      </label>
+    </div>
+    <div class="form-row">
+      <label>
+        <span>Address (cont.)</span>
+        <input type="text" name="shipping_address_line2" >
+      </label>
+    </div>
+    <div class="form-row">
+      <label>
+        <span>City</span>
+        <input type="text" name="shipping_address_city" >
+      </label>
+    </div>
+    <div class="form-row">
+      <label>
+        <span>State</span>
+        <input type="text" name="shipping_address_state" >
+      </label>
+    </div>
+    <div class="form-row">
+      <label>
+        <span>Zip code</span>
+        <input type="text" name="shipping_address_postal_code" >
+      </label>
+    </div>
+    <div class="form-row">
+      <label>
+        <span>Country</span>
+        <input type="text" name="shipping_address_country" >
+      </label>
+    </div>
+  </div>
+  <hr>
+  <h3>Personal Info & Payment</h3>
+  <div class="form-row">
+    <label>
+      <span>Your Name</span>
+      <input type="text" data-stripe="name" >
+    </label>
+  </div>
+  <div class="form-row">
+    <label>
+      <span>Your Email</span>
+      <input type="text" name="stripeEmail" >
+    </label>
+  </div>
   <div class="form-row">
     <label>
       <span>Card Number</span>
-      <input type="text" size="20" data-stripe="number" >
+      <input type="text" data-stripe="number" id="cc">
     </label>
   </div>
-
   <div class="form-row">
     <label>
       <span>Expiration (MM/YY)</span>
-      <input type="text" size="2" data-stripe="exp_month">
+      <input type="text" size="2" data-stripe="exp_month" id="ccm">
     </label>
     <span> / </span>
-    <input type="text" size="2" data-stripe="exp_year">
+    <input type="text" size="2" data-stripe="exp_year" id="ccy">
   </div>
 
   <div class="form-row">
     <label>
-      <span>CVC</span>
-      <input type="text" size="4" data-stripe="cvc">
+      <span>Security Code</span>
+      <input type="text" size="4" data-stripe="cvc" id="cvv">
     </label>
   </div>
   <input type="submit" class="submit" value="Submit Payment">

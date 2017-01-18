@@ -17,17 +17,36 @@ app.get("/", (req, res) =>
 app.post("/charge", (req, res) => {
   totalAmount = req.body.stripeAmount * 100;
   let amount = totalAmount;
-
   stripe.customers.create({
     email: req.body.stripeEmail,
-    source: req.body.stripeToken
+    source: req.body.stripeToken,
   })
   .then(customer =>
     stripe.charges.create({
       amount,
-      description: "Gift Card",
-         currency: "usd",
-         customer: customer.id
+      currency: "usd",
+      customer: customer.id
+    }))
+  .then(customer =>
+    stripe.orders.create({
+      email: req.body.stripeEmail,
+      currency: "usd",
+      items: [
+        {
+          parent: "sku_9xArcudWoopYAB",
+        }
+      ],
+      shipping: {
+        name: req.body.shipping_name,
+        address: {
+          line1: req.body.shipping_address_line1,
+          line2: req.body.shipping_address_line2,
+          city: req.body.shipping_address_city,
+          state: req.body.shipping_address_state,
+          country: req.body.shipping_address_country,
+          postal_code: req.body.shipping_address_postal_code
+        }
+      }
     }))
   .then(charge => res.render("charge.ejs"));
 });
