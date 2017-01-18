@@ -8,12 +8,13 @@ app.set('view engine', 'ejs')
 
 app.get("/", (req, res) =>
   res.render("index.ejs", {keyPublishable}));
+  console.log('Listening at http://localhost:7000/')
 
 app.post("/charge", (req, res) => {
   let amount = 500;
 
   stripe.customers.create({
-     email: req.body.stripeEmail,
+    email: req.body.stripeEmail,
     source: req.body.stripeToken
   })
   .then(customer =>
