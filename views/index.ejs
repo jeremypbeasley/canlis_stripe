@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>Canlis</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
   <script type="text/javascript">
 
@@ -39,6 +40,7 @@
 
         // Insert the token ID into the form so it gets submitted to the server:
         $form.append($('<input type="hidden" name="stripeToken">').val(token));
+        console.log(token);
 
         // Submit the form:
         $form.get(0).submit();
@@ -50,32 +52,37 @@
 
 <h2>Gift Cards</h2>
 
-<!-- <form action="/charge" method="POST">
-  <script
-    src="https://checkout.stripe.com/checkout.js" class="stripe-button"
-    class="stripe-button"
-    data-key="pk_test_Gbu2akKhNgGjbKi4LPxOOWqc"
-    data-amount="500"
-    data-name="Ojoseyewear"
-    data-description="Widget"
-    data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
-    data-locale="auto">
-  </script>
-</form> -->
-
 <form action="/charge" method="POST" id="payment-form">
   <span class="payment-errors"></span>
   <div class="form-row">
     <label>
       <span>Email</span>
-      <input type="text" size="20" name="stripeEmail">
+      <input type="text" size="20" name="stripeEmail" >
+    </label>
+  </div>
+  <div class="form-row">
+    <label>
+      <span>Name</span>
+      <input type="text" size="20" data-stripe="name">
+    </label>
+  </div>
+  <div class="form-row">
+    <label>
+      <span>Amount</span>
+      <select name="stripeAmount">
+        <option>Please select an amount</option>
+        <option value="350">Dinner for two — $350</option>
+        <option value="450">Dinner for two — $450</option>
+        <option value="600">Dinner for four — $600</option>
+        <option value="800">Dinner for four — $800</option>
+      </select>
     </label>
   </div>
 
   <div class="form-row">
     <label>
       <span>Card Number</span>
-      <input type="text" size="20" data-stripe="number">
+      <input type="text" size="20" data-stripe="number" >
     </label>
   </div>
 

@@ -4,6 +4,10 @@ const keySecret = process.env.SECRET_KEY;
 const app = require("express")();
 const stripe = require("stripe")(keySecret);
 
+const bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
+
 app.set('view engine', 'ejs')
 
 app.get("/", (req, res) =>
@@ -11,7 +15,8 @@ app.get("/", (req, res) =>
   console.log('Listening at http://localhost:7000/')
 
 app.post("/charge", (req, res) => {
-  let amount = 500;
+  totalAmount = req.body.stripeAmount * 100;
+  let amount = totalAmount;
 
   stripe.customers.create({
     email: req.body.stripeEmail,
@@ -20,7 +25,7 @@ app.post("/charge", (req, res) => {
   .then(customer =>
     stripe.charges.create({
       amount,
-      description: "Sample Charge",
+      description: "Gift Card",
          currency: "usd",
          customer: customer.id
     }))
@@ -28,3 +33,4 @@ app.post("/charge", (req, res) => {
 });
 
 app.listen(7000);
+
