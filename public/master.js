@@ -42,19 +42,21 @@ function stripeResponseHandler(status, response) {
 // AUTOFILL FOR TESTING
 
 $( document ).ready(function() {
-  $('[name="customer_name"]').val("Kurt Cobain");
-  $('[name="recipient_name"]').val("Courtney Love");
-  $('[name="shipping_address_line1"]').val("171 Lake Washington Blvd E");
-  $('[name="shipping_address_line2"]').val("");
-  $('[name="shipping_address_city"]').val("Seattle");
-  $('[name="shipping_address_state"]').val("Washington");
-  $('[name="shipping_address_country"]').val("United States");
-  $('[name="shipping_address_postal_code"]').val("98112");
-  $('[name="stripeEmail"]').val("kurtyboy@hotmail.com");
-  $('#cc').val("4242424242424242");
-  $('#ccm').val("12");
-  $('#ccy').val("19");
-  $('#cvv').val("123");
+
+  // $('[name="customer_name"]').val("Kurt Cobain");
+  // $('[name="recipient_name"]').val("Courtney Love");
+  // $('[name="shipping_address_line1"]').val("171 Lake Washington Blvd E");
+  // $('[name="shipping_address_line2"]').val("");
+  // $('[name="shipping_address_city"]').val("Seattle");
+  // $('[name="shipping_address_state"]').val("Washington");
+  // $('[name="shipping_address_country"]').val("United States");
+  // $('[name="shipping_address_postal_code"]').val("98112");
+  // $('[name="stripeEmail"]').val("kurtyboy@hotmail.com");
+  // $('#cc').val("4242424242424242");
+  // $('#ccm').val("12");
+  // $('#ccy').val("19");
+  // $('#cvv').val("123");
+  // $('input(type=text').focus();
 
   $(".ShippingInformation").hide();
 
@@ -69,6 +71,24 @@ $( document ).ready(function() {
       $(".ShippingInformation").hide();
     }
   });
+
+  // CLEVER ANIMATED FORM FIELDS
+
+  $('input[type=text]').each(function() {
+    $(this).on('focus', function() {
+      console.log("its in focus");
+      $(this).parent('.FormItem').addClass('active');
+    });
+    $(this).on('blur', function() {
+      if ($(this).val().length == 0) {
+       $(this).parent('.FormItem').removeClass('active');
+      }
+      if ($(this).val() != '') {          
+        $(this).parent('.FormItem').addClass('active');
+      }
+    });
+  });
+
   
 
 });

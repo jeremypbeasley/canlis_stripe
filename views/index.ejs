@@ -13,107 +13,88 @@
 <form action="/charge" method="POST" id="payment-form">
 <h1 class="Display1 mb10">Gift Card</h1>
   <span class="payment-errors"></span>
-  <div class="FormItem">
-    <p>For dinner for two, we recommend $400. Cards are available in any chosen amount. </p>
+  <div class="FormItem2 mb7">
+    <!-- <p>For dinner for two, we recommend $400. Cards are available in any chosen amount. </p> -->
     <label>
       <span class="Caption ">Amount</span>
       <div class="GiftAmount">
-        <input class="Display1 InputGiftAmount" type="text" name="stripeAmount" value="340">
+        <input class="Display1 InputGiftAmount" type="text" name="stripeAmount" value="350">
       </div>
     </label>
   </div>
   <div class="FormItem">
-    <label>
-      <span class="Caption">Recipient Name</span>
-      <input class="InputText" type="text" name="recipient_name" >
-    </label>
+    <label class="Caption">Recipient Name</label>
+    <input class="InputText" type="text" name="recipient_name" >
   </div>
-  <div class="FormItem mt10">
-    <label class="ShippingSelector">
-      <input type="radio" name="shipping_preference" value="pickup" id="ShipToPickup" checked="checked">
-      <span class="Caption">Pick up at Canlis</span>
-    </label>
-    <label class="ShippingSelector">
-      <input type="radio" name="shipping_preference" value="customer" id="ShipToMe">
-      <span class="Caption">Ship to me</span>
-    </label>
-    <label class="ShippingSelector">
-      <input type="radio" name="shipping_preference" value="recipient" id="ShipToRecipient">
-      <span class="Caption">Ship to recipient</span>
-    </label>
+  <p class="Display2 mt7 mb5">Shipping</p>
+  <div class="ShippingPreference">  
+    <ul>
+      <li class="ShippingSelector">
+        <input type="radio" name="shipping_preference" id="ShipToPickup" value="pickup">
+        <label for="ShipToPickup" class="Caption">Pick up at Canlis</label>
+        <div class="check"></div>
+      </li>
+      <li class="ShippingSelector">
+        <input type="radio" name="shipping_preference" id="ShipToMe" value="customer">
+        <label for="ShipToMe" class="Caption">Ship to me</label>
+        <div class="check"><div class="inside"></div></div>
+      </li>
+      <li class="ShippingSelector">
+        <input type="radio" name="shipping_preference" id="ShipToRecipient" value="recipient">
+        <label for="ShipToRecipient" class="Caption">Ship to recipient</label>
+        <div class="check"><div class="inside"></div></div>
+      </li>
+    </ul>
   </div>
-  <div class="ShippingInformation">
+  <div class="ShippingInformation mt4">
     <div class="FormItem">
-      <label>
-        <span class="Caption">Address</span>
-        <input class="InputText" type="text" name="shipping_address_line1" >
-      </label>
+      <label class="Caption">Address</label>
+      <input class="InputText" type="text" name="shipping_address_line1" >
     </div>
     <div class="FormItem">
-      <label>
-        <span class="Caption">Address (cont.)</span>
-        <input class="InputText" type="text" name="shipping_address_line2" >
-      </label>
+      <label class="Caption">Address (cont.)</label>
+      <input class="InputText" type="text" name="shipping_address_line2" >
     </div>
     <div class="FormItem">
-      <label>
-        <span class="Caption">City</span>
-        <input class="InputText" type="text" name="shipping_address_city" >
-      </label>
+      <label class="Caption">City</label>
+      <input class="InputText" type="text" name="shipping_address_city" >
     </div>
     <div class="FormItem">
-      <label>
-        <span class="Caption">State</span>
-        <input class="InputText" type="text" name="shipping_address_state" >
-      </label>
+      <label class="Caption">State</label>
+      <input class="InputText" type="text" name="shipping_address_state" >
     </div>
     <div class="FormItem">
-      <label>
-        <span class="Caption">Zip code</span>
-        <input class="InputText" type="text" name="shipping_address_postal_code" >
-      </label>
-    </div>
-    <div class="FormItem">
-      <label>
-        <span class="Caption">Country</span>
-        <input class="InputText" type="text" name="shipping_address_country" >
-      </label>
+      <label class="Caption">Postal Code</label>
+      <input class="InputText" type="text" name="shipping_address_postal_code" >
+      <input class="InputText" type="hidden" name="shipping_address_country" >
     </div>
   </div>
   <p class="Display2 mt10 mb5">Personal Info & Payment</p>
   <div class="FormItem">
-    <label>
-      <span class="Caption">Your Name</span>
-      <input class="InputText" type="text" data-stripe="name" name="customer_name" >
-    </label>
+    <label class="Caption">Your Name</label>
+    <input class="InputText" type="text" data-stripe="name" name="customer_name" >
   </div>
   <div class="FormItem">
-    <label>
-      <span class="Caption">Your Email</span>
-      <input class="InputText" type="text" name="stripeEmail" >
-    </label>
+    <label class="Caption">Your Email</label>
+    <input class="InputText" type="text" name="stripeEmail" >
   </div>
   <div class="FormItem">
-    <label>
-      <span class="Caption">Card Number</span>
-      <input class="InputText" type="text" data-stripe="number" id="cc">
-    </label>
+    <label class="Caption">Card Number</label>
+    <input class="InputText" type="text" data-stripe="number" id="cc">
   </div>
-  <div class="FormItem">
-    <label>
-      <span class="Caption">Expiration (MM/YY)</span>
-      <input class="InputText" type="text" size="2" data-stripe="exp_month" id="ccm">
-    </label>
-    <span> / </span>
+  <div class="FormItem Expiration Month">
+    <label class="Caption">Exp. (MM)</label>
+    <input class="InputText" type="text" size="2" data-stripe="exp_month" id="ccm">
+  </div>
+  <div class="FormItem Expiration">
+    <label class="Caption">Exp. (YY)</label>
     <input class="InputText" type="text" size="2" data-stripe="exp_year" id="ccy">
   </div>
-  <div class="FormItem">
-    <label>
-      <span class="Caption">Security Code</span>
-      <input class="InputText" type="text" size="4" data-stripe="cvc" id="cvv">
-    </label>
+  <div class="FormItem Expiration">
+    <label class="Caption">Security Code</label>
+    <input class="InputText" type="text" size="4" data-stripe="cvc" id="cvv">
   </div>
-  <input type="submit" class="submit" value="Submit">
+  <input type="submit" class="submit Caption mt5" value="Submit">
 </form>
 </body>
 </html>

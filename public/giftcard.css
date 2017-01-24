@@ -2,23 +2,11 @@ form {
   margin: 10%;
   max-width: 400px;
 }
-.FormItem {
+/*.FormItem {
   margin-bottom: 30px;
-}
+}*/
 hr {
   display: none;
-}
-input.InputText {
-  width: 100%;
-  display: block;
-  border: 0;
-  border-bottom: 1px solid #ccc;
-  border-radius: 0;
-  padding: 10px 0;
-  font-family: "GTSectraTrialBook", Times, Georgia, serif;
-  background: transparent;
-  transition: all 200ms ease-out;
-  outline: none;
 }
 input:focus {
   border-color: black;
@@ -50,6 +38,56 @@ input.InputGiftAmount {
     font-size: 5vw;
   }
 }
+input.InputText {
+  width: 100%;
+  display: block;
+  border: 0;
+  border-bottom: 1px solid #ccc;
+  border-radius: 0;
+  padding: 15px 0 5px 0;
+  font-family: "GTSectraTrialBook", Times, Georgia, serif;
+  background: transparent;
+  transition: all 200ms ease-out;
+  outline: none;
+  height: 50px;
+  z-index: 10;
+  position: relative;
+}
+.FormItem {
+  display: inline-block;
+  position: relative;
+  margin: 0;
+  height: 50px;
+  margin-bottom: 30px;
+  width: 100%;
+}
+.FormItem label {
+  position: absolute;
+  top: 25px;
+  left: 0px;
+  color:  black;
+  transition: .1s all linear;
+  cursor: text;
+  text-transform: uppercase;
+  z-index: 0;
+}
+
+.FormItem.active input {
+  padding-left: 0px;
+}
+
+.FormItem.active label {
+  top: 0px;
+  font-size: 11px;
+  opacity: .5;
+}
+.FormItem.Expiration {
+  width: calc(50% - 10px);
+}
+.FormItem.Expiration.Month {
+  margin-right: 15px;
+}
+/*
 .ShippingSelector {
   width: 100%;
   border: none;
@@ -65,7 +103,94 @@ input.InputGiftAmount {
 }
 .ShippingSelector span {
   margin-left: 1rem;
+}*/
+
+.ShippingPreference {
+  display: block;
+  overflow: auto;
 }
+.ShippingPreference ul{
+  list-style: none;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+.ShippingPreference ul li{
+  color: black;
+  display: block;
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 70px;
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 0;
+}
+.ShippingPreference ul li input[type=radio]{
+  position: absolute;
+  visibility: hidden;
+}
+.ShippingPreference ul li label{
+  display: block;
+  position: relative;
+  font-weight: 300;
+  padding: 30px 10px 10px 40px;
+  height: 70px;
+  z-index: 9;
+  cursor: pointer;
+  -webkit-transition: all 200ms linear;
+}
+.ShippingPreference ul li:hover label{
+  color: black;
+}
+.ShippingPreference ul li .check{
+  display: block;
+  position: absolute;
+  border: 1px solid #ccc;
+  border-radius: 100%;
+  height: 25px;
+  width: 25px;
+  top: 25px;
+  left: 0px;
+  z-index: 5;
+  transition: border 200ms linear;
+  -webkit-transition: border 200ms linear;
+}
+.ShippingPreference ul li:hover .check {
+  border: 2px solid black;
+}
+.ShippingPreference ul li .check::before {
+  display: block;
+  position: absolute;
+  content: '';
+  border-radius: 100%;
+  height: 60%;
+  width: 60%;
+  top: 21%;
+  left: 21.5%;
+  margin: auto;
+  transition: background 200ms linear;
+  -webkit-transition: background 200ms linear;
+}
+input[type=radio]:checked ~ .check {
+  border: 2px solid black;
+}
+input[type=radio]:checked ~ .check::before{
+  background: black;
+}
+input[type=radio]:checked ~ label{
+  color: black;
+}
+input[type=submit] {
+  width: 100%;
+  background: black;
+  padding: 20px;
+  border: none;
+  color: white;
+  text-align: center;
+}
+
+
 /*.payment-errors {
   border: 1px solid red;
   padding: 20px;
