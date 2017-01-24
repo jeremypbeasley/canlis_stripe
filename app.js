@@ -79,5 +79,5 @@ app.get("/", (req, res) =>
   res.render("index.ejs", {keyPublishable}));
   console.log('Listening at http://localhost:7000/')
 
-app.listen(7000);
+app.listen(process.env.PORT || 7000);
 
