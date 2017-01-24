@@ -26,10 +26,10 @@
   <meta name="msapplication-TileImage" content="_favicon/ms-icon-144x144.png">
 </head>
 <body>
-<form action="/charge" method="POST" id="payment-form">
+<form action="/thanks" method="POST" id="payment-form">
 <!-- <h1 class="Display1 mb5">Give the gift of Canlis.</h1>
  -->  <span class="payment-errors"></span>
-  <div class="FormItem2 mb2">
+  <div class="FormItem2 mb4">
     <!-- <p>For dinner for two, we recommend $400. Cards are available in any chosen amount. </p> -->
     <label>
       <span class="Caption">Amount</span>
@@ -95,20 +95,24 @@
     <input class="InputText" type="text" name="stripeEmail" >
   </div>
   <div class="FormItem">
+    <label class="Caption">Your Phone #</label>
+    <input class="InputText" type="text" name="customer_phone" >
+  </div>
+  <div class="FormItem">
     <label class="Caption">Card Number</label>
-    <input class="InputText" type="text" data-stripe="number" id="cc">
+    <input class="InputText" type="text" data-stripe="number" id="cc" maxlength="16">
   </div>
   <div class="FormItem Expiration Month">
     <label class="Caption">Exp. (MM)</label>
-    <input class="InputText" type="text" size="2" data-stripe="exp_month" id="ccm">
+    <input class="InputText" type="text" size="2" data-stripe="exp_month" id="ccm" maxlength="2">
   </div>
   <div class="FormItem Expiration">
     <label class="Caption">Exp. (YY)</label>
-    <input class="InputText" type="text" size="2" data-stripe="exp_year" id="ccy">
+    <input class="InputText" type="text" size="2" data-stripe="exp_year" id="ccy" maxlength="2">
   </div>
   <div class="FormItem Expiration">
     <label class="Caption">Security Code</label>
-    <input class="InputText" type="text" size="4" data-stripe="cvc" id="cvv">
+    <input class="InputText" type="text" size="4" data-stripe="cvc" id="cvv" maxlength="4">
   </div>
   <input type="submit" class="submit Caption mt5" value="Submit">
 </form>

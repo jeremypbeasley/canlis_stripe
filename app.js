@@ -17,7 +17,7 @@ app.set('view engine', 'ejs');
 
 // making a charge
 
-app.post("/charge", (req, res) => {
+app.post("/thanks", (req, res) => {
   // resolve amount
   console.log(req.body);
   let amount = req.body.stripeAmount * 100;
@@ -37,6 +37,9 @@ app.post("/charge", (req, res) => {
   stripe.customers.create({
     email: req.body.stripeEmail,
     source: req.body.stripeToken,
+    metadata: {
+      customer_phone: req.body.customer_phone
+    }
   })
   // charge them
   .then(customer =>
@@ -67,10 +70,10 @@ app.post("/charge", (req, res) => {
         }
       },
       metadata: {
-        recipient_name: req.body.recipient_name,
+        recipient_name: req.body.recipient_name
       }
     }))
-  .then(charge => res.send(req.body));
+  .then(charge => res.render("thanks.ejs"));
 });
 
 // render the app

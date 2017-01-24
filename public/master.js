@@ -44,6 +44,7 @@ function stripeResponseHandler(status, response) {
 $( document ).ready(function() {
 
   // $('[name="customer_name"]').val("Kurt Cobain");
+  // $('[name="customer_phone"]').val("1234567890");
   // $('[name="recipient_name"]').val("Courtney Love");
   // $('[name="shipping_address_line1"]').val("171 Lake Washington Blvd E");
   // $('[name="shipping_address_line2"]').val("");
@@ -56,7 +57,6 @@ $( document ).ready(function() {
   // $('#ccm').val("12");
   // $('#ccy').val("19");
   // $('#cvv').val("123");
-  // $('input(type=text').focus();
 
   $(".ShippingInformation").hide();
 
