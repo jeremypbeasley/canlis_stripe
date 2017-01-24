@@ -11,12 +11,12 @@
 </head>
 <body>
 <form action="/charge" method="POST" id="payment-form">
-<h1 class="Display1 mb10">Gift Card</h1>
-  <span class="payment-errors"></span>
-  <div class="FormItem2 mb7">
+<!-- <h1 class="Display1 mb5">Give the gift of Canlis.</h1>
+ -->  <span class="payment-errors"></span>
+  <div class="FormItem2 mb2">
     <!-- <p>For dinner for two, we recommend $400. Cards are available in any chosen amount. </p> -->
     <label>
-      <span class="Caption ">Amount</span>
+      <span class="Caption">Amount</span>
       <div class="GiftAmount">
         <input class="Display1 InputGiftAmount" type="text" name="stripeAmount" value="350">
       </div>
@@ -26,7 +26,7 @@
     <label class="Caption">Recipient Name</label>
     <input class="InputText" type="text" name="recipient_name" >
   </div>
-  <p class="Display2 mt7 mb5">Shipping</p>
+  <p class="Display2 mt5">Shipping</p>
   <div class="ShippingPreference">  
     <ul>
       <li class="ShippingSelector">
@@ -69,7 +69,7 @@
       <input class="InputText" type="hidden" name="shipping_address_country" >
     </div>
   </div>
-  <p class="Display2 mt10 mb5">Personal Info & Payment</p>
+  <p class="Display2 mt5 ">Personal Info & Payment</p>
   <div class="FormItem">
     <label class="Caption">Your Name</label>
     <input class="InputText" type="text" data-stripe="name" name="customer_name" >

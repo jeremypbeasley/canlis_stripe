@@ -1,5 +1,5 @@
 form {
-  margin: 10%;
+  margin: 4%;
   max-width: 400px;
 }
 /*.FormItem {
@@ -19,7 +19,7 @@ input.InputGiftAmount {
   border-bottom: 1px solid #ccc;
   border-radius: 0;
   background-color: transparent;
-  padding: 0px 0 20px 30px;
+  padding: 0px 0 20px 45px;
 }
 .GiftAmount {
   position: relative;
@@ -58,7 +58,7 @@ input.InputText {
   position: relative;
   margin: 0;
   height: 50px;
-  margin-bottom: 30px;
+  margin-bottom: 15px;
   width: 100%;
 }
 .FormItem label {
@@ -108,6 +108,7 @@ input.InputText {
 .ShippingPreference {
   display: block;
   overflow: auto;
+  margin-top: -10px;
 }
 .ShippingPreference ul{
   list-style: none;
