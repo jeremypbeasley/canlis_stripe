@@ -28,7 +28,7 @@ input.InputGiftAmount {
 }
 @media (min-width: 1024px) {
   input.InputGiftAmount {
-    margin-right: 45px;
+    padding-left: 45px;
   }
 }
 .GiftAmount {
