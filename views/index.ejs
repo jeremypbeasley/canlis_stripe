@@ -2,99 +2,14 @@
 <html>
 <head>
   <title>Canlis</title>
+  <link href="http://localhost:4000/assets/master.css" rel="stylesheet">
+  <link href="master.css" rel="stylesheet">
   <link rel="stylesheet" href="https://rawgit.com/twbs/bootstrap/v4-dev/dist/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
-  <script>
-    
-// SETTING KEY
-Stripe.setPublishableKey('pk_test_Gbu2akKhNgGjbKi4LPxOOWqc');
-
-// CREATING SINGLE USE TOKEN
-$(function() {
-  var $form = $('#payment-form');
-  $form.submit(function(event) {
-    // Disable the submit button to prevent repeated clicks:
-    $form.find('.submit').prop('disabled', true);
-    // Request a token from Stripe:
-    Stripe.card.createToken($form, stripeResponseHandler);
-    // Prevent the form from being submitted:
-    return false;
-  });
-});
-
-// SENDING FORM 
-function stripeResponseHandler(status, response) {
-  // Grab the form:
-  var $form = $('#payment-form');
-
-  if (response.error) { // Problem!
-
-    // Show the errors on the form:
-    $form.find('.payment-errors').text(response.error.message);
-    $form.find('.submit').prop('disabled', false); // Re-enable submission
-
-  } else { // Token was created!
-
-    // Get the token ID:
-    var token = response.id;
-
-    // Insert the token ID into the form so it gets submitted to the server:
-    $form.append($('<input type="hidden" name="stripeToken">').val(token));
-    console.log(token);
-
-    // Submit the form:
-    $form.get(0).submit();
-  }
-};
-
-// AUTOFILL FOR TESTING
-
-$( document ).ready(function() {
-  $('[data-stripe="name"]').val("Rivers Combover");
-  $('[name="shipping_name"]').val("Sigmund Freud");
-  $('[name="shipping_address_line1"]').val("123 Lois Lane");
-  $('[name="shipping_address_line2"]').val("Suite B");
-  $('[name="shipping_address_city"]').val("Seattle");
-  $('[name="shipping_address_state"]').val("Washington");
-  $('[name="shipping_address_country"]').val("United States");
-  $('[name="shipping_address_postal_code"]').val("98144");
-  $('[name="stripeEmail"]').val("ps@filmschool.com");
-  $('#cc').val("4242424242424242");
-  $('#ccm').val("12");
-  $('#ccy').val("19");
-  $('#cvv').val("123");
-
-  $(".ShippingInformation").hide();
-
-  $('.ShippingSelector').click(function() {
-    if($('#ShipToMe').is(':checked')) { 
-      $(".ShippingInformation").show();
-    }
-    if ($('#ShipToRecipient').is(':checked')) { 
-      $(".ShippingInformation").show();
-    }
-    if ($('#ShipToPickup').is(':checked')) { 
-      $(".ShippingInformation").hide();
-    }
-  });
-  
-
-});
-
-  </script>
-  <style>
-    form {
-      padding: 10%;
-    }
-    input {
-      width: 100%;
-      display: block;
-    }
-  </style>
+  <script type="text/javascript" src="master.js"></script>
 </head>
 <body>
-
 <form action="/charge" method="POST" id="payment-form">
 <h1>Order A Gift Card</h1>
   <span class="payment-errors"></span>
@@ -102,32 +17,32 @@ $( document ).ready(function() {
   <div class="form-row">
     <label>
       <span>Gift Card Amount</span>
-      <select name="stripeAmount">
+      <!-- <select name="stripeAmount">
         <option>Choose...</option>
         <option value="350">Dinner for two — $350</option>
         <option value="450">Dinner for two — $450</option>
         <option value="600">Dinner for four — $600</option>
         <option value="800">Dinner for four — $800</option>
-      </select>
+      </select> -->
+      <input type="number" name="stripeAmount" value="340">
     </label>
   </div>
   <hr>
   <div class="form-row">
     <label>
       <span>Recipient Name(s)</span>
-      <input type="text" name="shipping_name" >
+      <input type="text" name="recipient_name" >
     </label>
   </div>
   <hr>
   <div class="form-row">
     <label class="ShippingSelector">
       <span>Ship to: </span>
-      <input type="radio" name="group1" value="Customer" id="ShipToMe">Me<br>
-      <input type="radio" name="group1" value="Recipient" id="ShipToRecipient">Recipient(s)<br>
-      <input type="radio" name="group1" value="Pickup" id="ShipToPickup">Pick up at Canlis<br>
+      <input type="radio" name="shipping_preference" value="customer" id="ShipToMe">Me<br>
+      <input type="radio" name="shipping_preference" value="recipient" id="ShipToRecipient">Recipient(s)<br>
+      <input type="radio" name="shipping_preference" value="pickup" id="ShipToPickup">Pick up at Canlis<br>
     </label>
   </div>
-  
   <div class="ShippingInformation">
   <hr>
     <h3>Shipping Information</h3>
@@ -173,7 +88,7 @@ $( document ).ready(function() {
   <div class="form-row">
     <label>
       <span>Your Name</span>
-      <input type="text" data-stripe="name" >
+      <input type="text" data-stripe="name" name="customer_name" >
     </label>
   </div>
   <div class="form-row">
@@ -203,7 +118,7 @@ $( document ).ready(function() {
       <input type="text" size="4" data-stripe="cvc" id="cvv">
     </label>
   </div>
-  <input type="submit" class="submit" value="Submit Payment">
+  <input type="submit" class="submit" value="Submit">
 </form>
 
 </body>
