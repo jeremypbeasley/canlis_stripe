@@ -1,0 +1,75 @@
+form {
+  margin: 10%;
+  max-width: 400px;
+}
+.FormItem {
+  margin-bottom: 30px;
+}
+hr {
+  display: none;
+}
+input.InputText {
+  width: 100%;
+  display: block;
+  border: 0;
+  border-bottom: 1px solid #ccc;
+  border-radius: 0;
+  padding: 10px 0;
+  font-family: "GTSectraTrialBook", Times, Georgia, serif;
+  background: transparent;
+  transition: all 200ms ease-out;
+  outline: none;
+}
+input:focus {
+  border-color: black;
+  outline: none;
+}
+input.InputGiftAmount {
+  width: 100%;
+  display: block;
+  border: 0;
+  border-bottom: 1px solid #ccc;
+  border-radius: 0;
+  background-color: transparent;
+  padding: 0px 0 20px 30px;
+}
+.GiftAmount {
+  position: relative;
+}
+.GiftAmount:before {
+  content: "$";
+  position: absolute;
+  top: .2em;
+  left: -3px;
+  font-size: 12vw;
+  line-height: 125%;
+  font-family: "GTSectraDisplayTrialLight", Times, Georgia, serif;
+}
+@media (min-width: 62em) {
+  .GiftAmount:before {
+    font-size: 5vw;
+  }
+}
+.ShippingSelector {
+  width: 100%;
+  border: none;
+  margin-bottom: -1px;
+  display: block;
+  padding: 20px 0px;
+}
+.ShippingSelector:nth-child(1) {
+  border-bottom: 1px solid #ccc;
+}
+.ShippingSelector:nth-child(3) {
+  border-top: 1px solid #ccc;
+}
+.ShippingSelector span {
+  margin-left: 1rem;
+}
+/*.payment-errors {
+  border: 1px solid red;
+  padding: 20px;
+  margin-bottom: 30px;
+  color: red;
+}
+*/

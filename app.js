@@ -6,14 +6,9 @@
 
 const keyPublishable = "pk_test_Gbu2akKhNgGjbKi4LPxOOWqc";
 const keySecret = "sk_test_7ldA4yzhiJePJQp1yMk0oKjw";
-
-//const app = require("express")();
 const express = require('express')
 const app = express()
-
-
 const stripe = require("stripe")(keySecret);
-
 const bodyParser = require('body-parser')
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
