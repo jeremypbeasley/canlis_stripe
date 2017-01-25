@@ -155,6 +155,7 @@ $("#payment-form").submit(function(event) {
   });
   if(!$("#payment-form").valid()){
     console.log("aint valid");
+    $('body, html').animate({ scrollTop: 0 }, 200);
     event.preventDefault();
     return false;
   }
