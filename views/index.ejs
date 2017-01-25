@@ -5,9 +5,6 @@
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <link href="master.css" rel="stylesheet">
   <link href="giftcard.css" rel="stylesheet">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-  <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
-  <script type="text/javascript" src="master.js"></script>
   <link rel="apple-touch-icon" sizes="57x57" href="_favicon/apple-icon-57x57.png">
   <link rel="apple-touch-icon" sizes="60x60" href="_favicon/apple-icon-60x60.png">
   <link rel="apple-touch-icon" sizes="72x72" href="_favicon/apple-icon-72x72.png">
@@ -26,7 +23,7 @@
   <meta name="msapplication-TileImage" content="_favicon/ms-icon-144x144.png">
 </head>
 <body>
-<form action="/thanks" method="POST" id="payment-form">
+<form action="/thanks" method="POST" id="payment-form" name="payment-form">
   <div class="FormErrorsCont">
     <div class="FormErrors"></div>
   </div>
@@ -41,21 +38,21 @@
   </div>
   <div class="FormItem">
     <label class="Caption">Your Name</label>
-    <input class="InputText" type="text" data-stripe="name" name="customer_name" >
+    <input class="InputText" type="text" data-stripe="name" name="customer_name">
   </div>
   <div class="FormItem">
     <label class="Caption">Your Email</label>
-    <input class="InputText" type="text" name="stripeEmail" >
+    <input class="InputText" type="text" name="stripeEmail">
   </div>
   <div class="FormItem">
     <label class="Caption">Your Phone Number</label>
-    <input class="InputText" type="tel" name="customer_phone" pattern="[0-9]" maxlength="14">
+    <input class="InputText" type="tel" name="customer_phone" >
   </div>
   <div class="FormItem">
     <label class="Caption">Recipient's Name</label>
-    <input class="InputText" type="text" name="recipient_name" >
+    <input class="InputText" type="text" name="recipient_name">
   </div>
-  <p class="Display2 mt5">Shipping</p>
+  <p class="Display2 mt5" id="ShippingHeadline">Shipping</p>
   <div class="ShippingPreference">  
     <ul>
       <li class="ShippingSelector">
@@ -75,7 +72,7 @@
       </li>
     </ul>
   </div>
-  <div class="ShippingInformation mt4">
+  <div class="ShippingInformation mt0">
     <div class="FormItem">
       <label class="Caption">Address</label>
       <input class="InputText" type="text" name="shipping_address_line1" >
@@ -172,5 +169,12 @@
   </div>
   <input type="submit" class="submit Caption mt5" value="Submit">
 </form>
+
+
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+  <!-- <script type="text/javascript" src="parsley.js"></script> -->
+  <script type="text/javascript" src="jquery.validate.js"></script>
+  <script type="text/javascript" src="master.js"></script>
 </body>
 </html>

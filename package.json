@@ -2,7 +2,7 @@
   "name": "Canlis",
   "version": "0.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "dev": "nodemon app.js",
     "start": "nodemon app.js"
@@ -38,7 +38,8 @@
     "orchestrate": "^0.3.11",
     "q": "^1.0.1",
     "stripe": "latest",
-    "pug": "latest"
+    "pug": "latest",
+    "jquery-validation": "^1.16.0"
   }
 }
 
