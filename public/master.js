@@ -67,7 +67,7 @@ $( document ).ready(function() {
 
 // FORM VALIDATION
 
-//Stripe.setPublishableKey('pk_test_Gbu2akKhNgGjbKi4LPxOOWqc');
+Stripe.setPublishableKey('pk_test_Gbu2akKhNgGjbKi4LPxOOWqc');
 
 $("#payment-form").submit(function(event) {
   $("#payment-form").validate({
@@ -180,25 +180,16 @@ function renderErrors(errorString) {
 }
 
 // SENDING FORM 
+
 function stripeResponseHandler(status, response) {
-  // Grab the form:
   var $form = $('#payment-form');
-
-  if (response.error) { // Problem!
-    // Show the errors on the form:
+  if (response.error) { 
     renderErrors(response.error.message);
-    $form.find('.submit').prop('disabled', false); // Re-enable submission
-
-  } else { // Token was created!
-
-    // Get the token ID:
+    $form.find('.submit').prop('disabled', false); 
+  } else { 
     var token = response.id;
-
-    // Insert the token ID into the form so it gets submitted to the server:
     $form.append($('<input type="hidden" name="stripeToken">').val(token));
     console.log(token);
-
-    // Submit the form:
     $form.get(0).submit();
   }
 };
