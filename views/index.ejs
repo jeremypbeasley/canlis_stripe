@@ -89,7 +89,7 @@
       <div class="StateSelector">
         <label class="Caption StateLabel">State</label>
         <select name="shipping_address_state" class="Default">
-          <option value="AL">State</option>
+          <option value="">State</option>
           <option value="AL">Alabama</option>
           <option value="AK">Alaska</option>
           <option value="AZ">Arizona</option>
@@ -147,7 +147,7 @@
     <div class="FormItem">
       <label class="Caption">Postal Code</label>
       <input class="InputText" type="text" name="shipping_address_postal_code" >
-      <input class="InputText" type="hidden" name="shipping_address_country" >
+      <input class="InputText" type="hidden" name="shipping_address_country" value="United States">
     </div>
   </div>
   <p class="Display2 mt5 ">Payment</p>
@@ -173,7 +173,6 @@
 
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
-  <!-- <script type="text/javascript" src="parsley.js"></script> -->
   <script type="text/javascript" src="jquery.validate.js"></script>
   <script type="text/javascript" src="master.js"></script>
 </body>

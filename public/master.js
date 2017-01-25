@@ -94,6 +94,12 @@ Stripe.setPublishableKey('pk_test_Gbu2akKhNgGjbKi4LPxOOWqc');
 //   });
 // });
 
+// custom method for validating states
+
+// $.validator.addMethod("equals", function(value, element, param) {
+//     return this.optional(element) || $.inArray(value, param) > -1; 
+// }, $.format(""));
+
 $("#payment-form").submit(function(event) {
   $("#payment-form").validate({
     rules: {
@@ -118,10 +124,23 @@ $("#payment-form").submit(function(event) {
       shipping_preference: {
         required: true,
       },
+      shipping_address_line1: {
+        required: ["#ShipToMe:checked", "#ShipToRecipient:checked"]
+      },
+      shipping_address_city: {
+        required: ["#ShipToMe:checked", "#ShipToRecipient:checked"]
+      },
+      shipping_address_state: {
+        required: ["#ShipToMe:checked", "#ShipToRecipient:checked"],
+        // equals: ["AL", "AK", "AZ"],
+      },
+      shipping_address_postal_code: {
+        required: ["#ShipToMe:checked", "#ShipToRecipient:checked"]
+      },
     },
     messages: {
       stripeAmount: {
-        required: "Please tell us how much you want your gift card to be for.",
+        required: "Please tell us how much you you'd like on your gift card.",
         digits: "Please enter a valid whole number."
       },
       customer_name: {
@@ -140,6 +159,19 @@ $("#payment-form").submit(function(event) {
       },
       shipping_preference: {
         required: "Please let us know how you'd like your card delivered.",
+      },
+      shipping_address_line1: {
+        required: "Please enter a valid address."
+      },
+      shipping_address_city: {
+        required: "Please enter a valid city name."
+      },
+      shipping_address_state: {
+        required: "Please select a state.",
+        // equals: "Please select a valid state."
+      },
+      shipping_address_postal_code: {
+        required: "Please enter a valid ZIP code."
       },
     },
     errorPlacement: function(error, element) {
@@ -201,37 +233,5 @@ function stripeResponseHandler(status, response) {
     $form.get(0).submit();
   }
 };
-
-
-
-
-
-
-// var validator = new FormValidator('payment-form', [
-// {
-//     name: 'stripeAmount',
-//     display: 'whahahaaah',
-//     rules: 'required'
-// }, {
-//     name: 'customer_name',
-//     rules: 'required'
-// }, {
-//     name: 'stripeEmail',
-//     rules: 'valid_email'
-// }
-// ], function(errors, event) {
-//     if (errors.length > 0) {
-//         console.log("there are errors")
-//         return false;
-//         // $('#payment-form').submit(function(event) {
-//         //   return false;
-//         // });
-//     }
-//     if (errors.length < 0) {
-//         console.log("there are NOT errors");
-//         return true
-//     }
-// });
-
 
 
