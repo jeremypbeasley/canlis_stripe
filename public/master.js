@@ -52,10 +52,6 @@ function stripeResponseHandler(status, response) {
 
 $( document ).ready(function() {
 
-  $('.StateLabel').click(function() {
-    $('.StateSelector select').focus();
-    $('.StateSelector select').addClass("Active");
-  });
 
 
   // $('[name="customer_name"]').val("Kurt Cobain");
@@ -73,7 +69,7 @@ $( document ).ready(function() {
   // $('#ccy').val("19");
   // $('#cvv').val("123");
 
-  //$(".ShippingInformation").hide();
+  $(".ShippingInformation").hide();
 
   $('.ShippingSelector').click(function() {
     if($('#ShipToMe').is(':checked')) { 
@@ -102,6 +98,11 @@ $( document ).ready(function() {
         $(this).parent('.FormItem').addClass('active');
       }
     });
+  });
+
+  $('.StateLabel').click(function() {
+    $('.StateSelector select').focus();
+    $('.StateSelector select').addClass("Active");
   });
 
   $('.StateSelector select').each(function() {
