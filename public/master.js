@@ -14,15 +14,24 @@ $(function() {
   });
 });
 
+function renderErrors(errorString) {
+  $('body, html').animate({ scrollTop: 0 }, 200);
+  $('.FormErrorsCont').show();
+  setTimeout(function(){ 
+    $('.FormErrorsCont').addClass("Active"); 
+    $('.FormErrors').addClass("Active"); 
+    $('.FormErrors').text(errorString);
+  }, 400);
+}
+
 // SENDING FORM 
 function stripeResponseHandler(status, response) {
   // Grab the form:
   var $form = $('#payment-form');
 
   if (response.error) { // Problem!
-
     // Show the errors on the form:
-    $form.find('.payment-errors').text(response.error.message);
+    renderErrors(response.error.message);
     $form.find('.submit').prop('disabled', false); // Re-enable submission
 
   } else { // Token was created!
@@ -42,6 +51,9 @@ function stripeResponseHandler(status, response) {
 // AUTOFILL FOR TESTING
 
 $( document ).ready(function() {
+
+  
+
 
   // $('[name="customer_name"]').val("Kurt Cobain");
   // $('[name="customer_phone"]').val("1234567890");

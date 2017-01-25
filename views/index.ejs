@@ -27,19 +27,32 @@
 </head>
 <body>
 <form action="/thanks" method="POST" id="payment-form">
-<!-- <h1 class="Display1 mb5">Give the gift of Canlis.</h1>
- -->  <span class="payment-errors"></span>
+  <div class="FormErrorsCont">
+    <div class="FormErrors"></div>
+  </div>
   <div class="FormItem2 mb4">
-    <!-- <p>For dinner for two, we recommend $400. Cards are available in any chosen amount. </p> -->
+    <p>Cards are available in any amount, however; we recommend $400 for a dinner for two.</p>
     <label>
       <span class="Caption">Amount</span>
       <div class="GiftAmount">
-        <input class="Display1 InputGiftAmount" type="text" name="stripeAmount" value="350">
+        <input class="Display1 InputGiftAmount" type="text" name="stripeAmount" value="400">
       </div>
     </label>
   </div>
   <div class="FormItem">
-    <label class="Caption">Recipient Name</label>
+    <label class="Caption">Your Name</label>
+    <input class="InputText" type="text" data-stripe="name" name="customer_name" >
+  </div>
+  <div class="FormItem">
+    <label class="Caption">Your Email</label>
+    <input class="InputText" type="text" name="stripeEmail" >
+  </div>
+  <div class="FormItem">
+    <label class="Caption">Your Phone Number</label>
+    <input class="InputText" type="text" name="customer_phone" >
+  </div>
+  <div class="FormItem">
+    <label class="Caption">Recipient's Name</label>
     <input class="InputText" type="text" name="recipient_name" >
   </div>
   <p class="Display2 mt5">Shipping</p>
@@ -85,19 +98,7 @@
       <input class="InputText" type="hidden" name="shipping_address_country" >
     </div>
   </div>
-  <p class="Display2 mt5 ">Personal Info & Payment</p>
-  <div class="FormItem">
-    <label class="Caption">Your Name</label>
-    <input class="InputText" type="text" data-stripe="name" name="customer_name" >
-  </div>
-  <div class="FormItem">
-    <label class="Caption">Your Email</label>
-    <input class="InputText" type="text" name="stripeEmail" >
-  </div>
-  <div class="FormItem">
-    <label class="Caption">Your Phone #</label>
-    <input class="InputText" type="text" name="customer_phone" >
-  </div>
+  <p class="Display2 mt5 ">Payment</p>
   <div class="FormItem">
     <label class="Caption">Card Number</label>
     <input class="InputText" type="text" data-stripe="number" id="cc" maxlength="16">
