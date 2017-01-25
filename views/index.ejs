@@ -35,7 +35,7 @@
     <label>
       <span class="Caption">Amount</span>
       <div class="GiftAmount">
-        <input class="Display1 InputGiftAmount" type="text" name="stripeAmount" value="400">
+        <input class="Display1 InputGiftAmount" type="tel" name="stripeAmount">
       </div>
     </label>
   </div>
@@ -49,7 +49,7 @@
   </div>
   <div class="FormItem">
     <label class="Caption">Your Phone Number</label>
-    <input class="InputText" type="text" name="customer_phone" >
+    <input class="InputText" type="tel" name="customer_phone" pattern="[0-9]" maxlength="14">
   </div>
   <div class="FormItem">
     <label class="Caption">Recipient's Name</label>
@@ -156,19 +156,19 @@
   <p class="Display2 mt5 ">Payment</p>
   <div class="FormItem">
     <label class="Caption">Card Number</label>
-    <input class="InputText" type="text" data-stripe="number" id="cc" maxlength="16">
+    <input class="InputText" type="tel" data-stripe="number" id="cc" maxlength="16">
   </div>
   <div class="FormItem Expiration Month">
     <label class="Caption">Exp. (MM)</label>
-    <input class="InputText" type="text" size="2" data-stripe="exp_month" id="ccm" maxlength="2">
+    <input class="InputText" type="tel" size="2" data-stripe="exp_month" id="ccm" maxlength="2">
   </div>
   <div class="FormItem Expiration">
     <label class="Caption">Exp. (YY)</label>
-    <input class="InputText" type="text" size="2" data-stripe="exp_year" id="ccy" maxlength="2">
+    <input class="InputText" type="tel" size="2" data-stripe="exp_year" id="ccy" maxlength="2">
   </div>
   <div class="FormItem Expiration">
     <label class="Caption">Security Code</label>
-    <input class="InputText" type="text" size="4" data-stripe="cvc" id="cvv" maxlength="4">
+    <input class="InputText" type="tel" size="4" data-stripe="cvc" id="cvv" maxlength="4">
   </div>
   <input type="submit" class="submit Caption mt5" value="Submit">
 </form>

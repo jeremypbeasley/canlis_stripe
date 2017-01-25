@@ -89,7 +89,7 @@ $( document ).ready(function() {
 
   // CLEVER ANIMATED FORM FIELDS
 
-  $('input[type=text]').each(function() {
+  $('input.InputText').each(function() {
     $(this).on('focus', function() {
       console.log("its in focus");
       $(this).parent('.FormItem').addClass('active');
