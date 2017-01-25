@@ -1,10 +1,6 @@
-
-
-// AUTOFILL FOR TESTING
-
 $( document ).ready(function() {
 
-
+  // TESTING ONLY: FORM AUTO FILL
 
   // $('[name="customer_name"]').val("Kurt Cobain");
   // $('[name="customer_phone"]').val("1234567890");
@@ -21,6 +17,8 @@ $( document ).ready(function() {
   // $('#ccy').val("19");
   // $('#cvv').val("123");
 
+  // SHIPPING INFO TOGGLE
+
   $(".ShippingInformation").hide();
 
   $('.ShippingSelector').click(function() {
@@ -35,7 +33,7 @@ $( document ).ready(function() {
     }
   });
 
-  // CLEVER ANIMATED FORM FIELDS
+  // CLEVER ANIMATED INPUT FIELDS
 
   $('input.InputText').each(function() {
     $(this).on('focus', function() {
@@ -52,6 +50,8 @@ $( document ).ready(function() {
     });
   });
 
+  // CLEVER ANIMATED SELECT FIELDS 
+
   $('.StateLabel').click(function() {
     $('.StateSelector select').focus();
     $('.StateSelector select').addClass("Active");
@@ -62,43 +62,12 @@ $( document ).ready(function() {
       $('.StateLabel').addClass("Active");
       $(this).removeClass("Default");
     });
-    // $(this).on('blur', function() {
-    //   if ($(this).val().length == 0) {
-    //     $('.StateLabel').show();
-    //     $('this').removeClass("Default");
-    //   }
-    //   if ($(this).val() != '') {          
-    //     $('.StateLabel').show();
-    //     $('this').addClass("Default");
-    //   }
-    // });
   });
-
-
-
 });
 
-// SETTING KEY
-Stripe.setPublishableKey('pk_test_Gbu2akKhNgGjbKi4LPxOOWqc');
+// FORM VALIDATION
 
-//CREATING SINGLE USE TOKEN
-// $(function() {
-//   var $form = $('#payment-form');
-//   $('#payment-form').submit(function(event) {
-//     // Disable the submit button to prevent repeated clicks:
-//     $(this).find('.submit').prop('disabled', true);
-//     // Request a token from Stripe:
-//     Stripe.card.createToken($form, stripeResponseHandler);
-//     // Prevent the form from being submitted:
-//     return false;
-//   });
-// });
-
-// custom method for validating states
-
-// $.validator.addMethod("equals", function(value, element, param) {
-//     return this.optional(element) || $.inArray(value, param) > -1; 
-// }, $.format(""));
+//Stripe.setPublishableKey('pk_test_Gbu2akKhNgGjbKi4LPxOOWqc');
 
 $("#payment-form").submit(function(event) {
   $("#payment-form").validate({
@@ -151,11 +120,11 @@ $("#payment-form").submit(function(event) {
         email: "Your email address must be in the format of name@domain.com"
       },
       customer_phone: {
-        required: "We'll need your phone in case we have to contact you about your card.",
+        required: "We'll need your phone in case we have to contact you.",
         digits: "Please enter your phone number with only numbers and no spaces."
       },
       recipient_name: {
-        required: "We'll need to know who this gift card is for.",
+        required: "Please tell us who this gift card is for.",
       },
       shipping_preference: {
         required: "Please let us know how you'd like your card delivered.",

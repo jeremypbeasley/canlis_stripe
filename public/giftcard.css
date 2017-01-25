@@ -56,10 +56,13 @@ input.InputGiftAmount {
   border-radius: 0;
   background-color: transparent;
   padding: 0px 0 20px 25px;
+  font-size: 45px;
+  font-family: "GTSectraDisplayTrialLight", Times, Georgia, serif;
 }
 @media (min-width: 1024px) {
   input.InputGiftAmount {
     padding-left: 45px;
+    font-size: 72px;
   }
 }
 .GiftAmount {
@@ -70,13 +73,13 @@ input.InputGiftAmount {
   position: absolute;
   top: .2em;
   left: -3px;
-  font-size: 12vw;
+  font-size: 45px;
   line-height: 125%;
   font-family: "GTSectraDisplayTrialLight", Times, Georgia, serif;
 }
 @media (min-width: 62em) {
   .GiftAmount:before {
-    font-size: 5vw;
+    font-size: 72px;
   }
 }
 input.InputText {
@@ -98,7 +101,7 @@ input.InputText {
   display: inline-block;
   position: relative;
   margin: 0;
-  /*height: 50px;*/
+  /*height: 45px;*/
   margin-bottom: 15px;
   width: 100%;
 }
@@ -250,6 +253,10 @@ input[type=submit] {
   opacity: .5;
   top: 0;
 }
+.StateSelector {
+  height: 45px;
+  display: block;
+}
 .StateSelector select{
   width: 100%;
   background: transparent;
@@ -273,6 +280,9 @@ input[type=submit] {
 .StateSelector select.Active {
   opacity: 1;
   height: auto;
+}
+.StateSelector label.error {
+  top: 30px;
 }
 .FormErrorsCont {
   height: 0px;
