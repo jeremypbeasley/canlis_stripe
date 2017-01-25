@@ -168,7 +168,7 @@ input.InputText {
   -webkit-transition: border 200ms linear;
 }
 .ShippingPreference ul li:hover .check {
-  border: 2px solid black;
+  border: 1px solid black;
 }
 .ShippingPreference ul li .check::before {
   display: block;
@@ -184,7 +184,7 @@ input.InputText {
   -webkit-transition: background 200ms linear;
 }
 input[type=radio]:checked ~ .check {
-  border: 2px solid black;
+  border: 1px solid black;
 }
 input[type=radio]:checked ~ .check::before{
   background: black;
@@ -201,7 +201,29 @@ input[type=submit] {
   text-align: center;
   border-radius: 0;
 }
-
+.FormErrorsCont {
+  height: 0px;
+  transition: all 200ms ease-out;
+}
+.FormErrorsCont.Active {
+  height: 90px;
+}
+.FormErrors {
+  opacity: 0;
+  background: white;
+  border: 1px solid #ED5654;
+  padding: 16px;
+  color: #ED5654;
+  border-radius: 4px;
+  box-shadow: 0px 0px 18px 0px rgba(255,255,255,1);
+  transition: all 200ms ease-out;
+  transition-delay: 100ms;
+  transform: translateY(10px);
+}
+.FormErrors.Active{
+  transform: translateY(0px);
+  opacity: 1;
+}
 
 /*.payment-errors {
   border: 1px solid red;
