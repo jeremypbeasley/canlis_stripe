@@ -52,7 +52,10 @@ function stripeResponseHandler(status, response) {
 
 $( document ).ready(function() {
 
-  
+  $('.StateLabel').click(function() {
+    $('.StateSelector select').focus();
+    $('.StateSelector select').addClass("Active");
+  });
 
 
   // $('[name="customer_name"]').val("Kurt Cobain");
@@ -70,7 +73,7 @@ $( document ).ready(function() {
   // $('#ccy').val("19");
   // $('#cvv').val("123");
 
-  $(".ShippingInformation").hide();
+  //$(".ShippingInformation").hide();
 
   $('.ShippingSelector').click(function() {
     if($('#ShipToMe').is(':checked')) { 
@@ -99,6 +102,23 @@ $( document ).ready(function() {
         $(this).parent('.FormItem').addClass('active');
       }
     });
+  });
+
+  $('.StateSelector select').each(function() {
+    $(this).on('focus', function() {
+      $('.StateLabel').addClass("Active");
+      $(this).removeClass("Default");
+    });
+    // $(this).on('blur', function() {
+    //   if ($(this).val().length == 0) {
+    //     $('.StateLabel').show();
+    //     $('this').removeClass("Default");
+    //   }
+    //   if ($(this).val() != '') {          
+    //     $('.StateLabel').show();
+    //     $('this').addClass("Default");
+    //   }
+    // });
   });
 
   

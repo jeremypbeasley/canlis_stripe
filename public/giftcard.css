@@ -17,6 +17,24 @@ input:focus {
   border-color: black;
   outline: none;
 }
+/*input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus
+input.InputText:-webkit-autofill,
+input.InputText:-webkit-autofill:hover, 
+input.InputText:-webkit-autofill:focus
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  border: 0;
+  border-bottom: 5px solid yellow;
+  -webkit-text-fill-color: black;
+  -webkit-box-shadow: 0 0 0px 1000px transparent inset;
+  transition: background-color 5000s ease-in-out 0s;
+}*/
 input.InputGiftAmount {
   width: 100%;
   display: block;
@@ -201,6 +219,41 @@ input[type=submit] {
   text-align: center;
   border-radius: 0;
 }
+.FormItem .StateLabel {
+  top: 10;
+  position: absolute;
+  opacity: 0;
+  font-size: 11px;
+  transition: all 200ms ease-out;
+}
+.FormItem .StateLabel.Active {
+  opacity: .5;
+  top: 0;
+}
+.StateSelector select{
+  width: 100%;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  -webkit-appearance:none;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #ccc;
+  position: relative;
+  top: 20px;
+  outline: none;
+}
+.StateSelector select.Default {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.2rem;
+  font-family: "ApercuMono", Andale Mono, monospaced;
+}
+.StateSelector select.Active {
+  opacity: 1;
+  height: auto;
+}
 .FormErrorsCont {
   height: 0px;
   transition: all 200ms ease-out;
@@ -224,6 +277,7 @@ input[type=submit] {
   transform: translateY(0px);
   opacity: 1;
 }
+
 
 /*.payment-errors {
   border: 1px solid red;
