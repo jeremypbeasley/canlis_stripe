@@ -17,6 +17,20 @@ $( document ).ready(function() {
   // $('#ccy').val("19");
   // $('#cvv').val("123");
 
+  // Populates "You will be charged.." dialogue before submit button
+
+  $("#YouWillBeCharged").hide()
+  $(".GiftAmount input").keyup(function() {
+      var value = Number($(this).val());
+      if (value) {
+          var shippingCost = 4;
+          var totalCharge = value + shippingCost;
+          $("#YouWillBeCharged").show().text("You will be charged a total of $" + totalCharge);
+      } else {
+          $("#YouWillBeCharged").hide().text("");
+      };
+  }).keyup();
+
   // SHIPPING INFO TOGGLE
 
   $(".ShippingInformation").hide();

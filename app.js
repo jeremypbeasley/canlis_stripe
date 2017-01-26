@@ -1,11 +1,6 @@
-// PUBLISHABLE_KEY=pk_test_Gbu2akKhNgGjbKi4LPxOOWqc 
-// SECRET_KEY=sk_test_7ldA4yzhiJePJQp1yMk0oKjw node app.js
-
-// const keyPublishable = process.env.PUBLISHABLE_KEY;
-// const keySecret = process.env.SECRET_KEY;
-
-const keyPublishable = "pk_test_Gbu2akKhNgGjbKi4LPxOOWqc";
-const keySecret = "sk_test_7ldA4yzhiJePJQp1yMk0oKjw";
+require('dotenv').config()
+const keyPublishable = process.env.keyPublishable;
+const keySecret = process.env.keySecret;
 const express = require('express')
 const app = express()
 const stripe = require("stripe")(keySecret);
