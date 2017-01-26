@@ -13,20 +13,30 @@ app.set('view engine', 'ejs');
 // making a charge
 
 app.post("/thanks", (req, res) => {
-  // resolve amount
+  // log form response
   console.log(req.body);
-  let amount = req.body.stripeAmount * 100;
+  // 400 represents the additional shipping charge 
+  let amount = req.body.stripeAmount * 100 + 400;
   // resolve shipping preference
-  var shipping_preference = req.body.shipping_preference;
   var shipping_recipient = "";
-  if (shipping_preference == "customer") {
-    shipping_recipient = req.body.customer_name
+  if (req.body.shipping_preference == "customer") {
+    shipping_recipient = req.body.customer_name;
+    shipping_preference = "Ship to customer";
   }
-  if (shipping_preference == "recipient") {
-    shipping_recipient = req.body.recipient_name
+  if (req.body.shipping_preference == "recipient") {
+    shipping_recipient = req.body.recipient_name;
+    shipping_preference = "Ship to recipient";
   }
-  if (shipping_preference == "pickup") {
-    shipping_recipient = "DO NOT SHIP"
+  if (req.body.shipping_preference == "pickup") {
+    shipping_recipient = "DO NOT SHIP";
+    shipping_preference = "Pick up at office";
+  }
+  // custom message
+  if (req.body.recipient_message) {
+    recipient_message = req.body.recipient_message;
+  }
+  else {
+    recipient_message = "";
   }
   // make a new customer
   stripe.customers.create({
@@ -51,6 +61,9 @@ app.post("/thanks", (req, res) => {
       items: [
         {
           parent: "sku_9zNqpcc7vUcgNv",
+          description: "this is a dumb description",
+          amount: 999,
+          currency: "usd",
         }
       ],
       shipping: {
@@ -65,7 +78,12 @@ app.post("/thanks", (req, res) => {
         }
       },
       metadata: {
-        recipient_name: req.body.recipient_name
+        giftcard_amount: req.body.stripeAmount,
+        delivery_method: shipping_preference,
+        customer_name: req.body.customer_name,
+        customer_phone: req.body.customer_phone,
+        recipient_name: req.body.recipient_name,
+        recipient_message: recipient_message
       }
     }))
   .then(charge => res.render("thanks.ejs"));

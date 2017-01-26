@@ -25,7 +25,7 @@ $( document ).ready(function() {
       if (value) {
           var shippingCost = 4;
           var totalCharge = value + shippingCost;
-          $("#YouWillBeCharged").show().text("You will be charged a total of $" + totalCharge);
+          $("#YouWillBeCharged").show().text("You will be charged a total of $" + totalCharge + ".00");
       } else {
           $("#YouWillBeCharged").hide().text("");
       };
@@ -51,7 +51,6 @@ $( document ).ready(function() {
 
   $('input.InputText').each(function() {
     $(this).on('focus', function() {
-      console.log("its in focus");
       $(this).parent('.FormItem').addClass('active');
     });
     $(this).on('blur', function() {
