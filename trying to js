@@ -1,0 +1,44 @@
+list all skus {
+  if (has sku = true) {
+    var sku = oldsku
+  } else {
+    make a new sku {
+      making new sku
+    }
+  }
+}
+
+————————
+
+var proposedSku = "xyz"
+var newSku = "xyz"
+
+list all skus(listofskus);
+
+when list of skus loads, do this:
+
+doesSkuExist(listofskus) {
+  if (list has proposedsku) {
+    newSku = oldsku;
+  } else {
+    stripe.skus.create({
+      object
+    }, function(err, sku) {
+      newSku = sku;
+    });
+  }
+}
+
+when doesSkuExist finishes, do this: 
+
+* newSku should contain our final sku *
+
+
+
+
+
+stripe.skus.create({
+  settings
+}, function(err, sku) {
+  
+});
