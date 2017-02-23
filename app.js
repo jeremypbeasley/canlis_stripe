@@ -1,3 +1,5 @@
+// Dependencies
+
 require('dotenv').config()
 const keyPublishable = process.env.keyPublishable;
 const keySecret = process.env.keySecret;
@@ -10,84 +12,114 @@ app.use(bodyParser.json());
 app.use(express.static('public'));
 app.set('view engine', 'ejs');
 var _ = require("lodash");
+var getJSON = require('get-json');
 
-// making a charge
-
-app.post("/thanks", (req, res) => {
-  // converts to whole number
-  var amount = req.body.stripeAmount * 100;
-  var newSku = "";
-  var productId = "prod_A06J6m2sZjfgXq";
-  var customerId = "";
-  stripe.skus.list({ 
-    limit: 30 
-  })
-  .then(
-    function(skus) {
-      console.log("first")
-      var sortedskus = _.map(skus.data, "price")
-      //console.log(sortedskus)
-      if (sortedskus.includes(amount)) {
-        existingSku = _.filter(skus.data, {'price': amount});
-        newSku = existingSku[0].id;
-        console.log("This price already exists, use sku: " + newSku);
-      }
-      else {
-        stripe.skus.create({
-          product: productId,
-          attributes: {'loadedamount': req.body.stripeAmount},
-          price: amount,
-          currency: 'usd',
-          inventory: {type: 'infinite'}
-        }, 
-          function(err, sku) {
-            newSku = sku.id;
-            console.log("This is a new price. We made a new sku " + sku.id);
-          }
-        )
-      }
-    }
-  )
-  .then(
-    stripe.customers.create({
-      email: req.body.stripeEmail,
-      source: req.body.stripeToken
-    }, 
-      function(err, customer) {
-        customerId = customer.id;
-        console.log("customerId=" + customerId)
-      }
-    )
-  )
-  .then(
-    stripe.orders.create({
-      email: req.body.stripeEmail,
-      customer: customerId,
-      currency: "usd",
-      items: [
-        {
-          amount: amount,
-          currency: "usd",
-          parent: newSku
-        }
-      ]
-    })
-  )
-  .then(
-    stripe.charges.create({
-      amount: amount,
-      currency: "usd",
-      customer: customerId,
-    })
-  )
-  .then(charge => res.render("thanks.ejs"));
-});
-
-// render the app
+// Initialize
 
 app.get("/", (req, res) =>
   res.render("index.ejs", {keyPublishable}));
   console.log('Listening at http://localhost:7000/')
 
-app.listen(process.env.PORT || 7000);
+// Form submission
 
+// Stripe requires a very particular order of functions here.
+// 1. Create a new customer.
+// 2. You must evaluate a sku for a product. Unfortunately, Stripe does not support a variable price on a product. The only way to do this is to create multiple skus of one product, each with their own price. You can create a sku at the time of purchase but since the only attribute of the sku is price, you'll get an error back if you try to make a new sku for a price that's already been created by another customer.
+// 3. You must query the existing skus to see if ones already exists with the price your customer has entered. If there is not, you proceed with a new sku. If there is, you must use that existing sku.
+// 4. Create an order for said sku.
+// 5. Create a charge.
+
+function evaluateSku(form, res) {
+  console.log(form);
+  var newSku;
+  stripe.skus.list({
+    limit: 30
+  },
+    function(err, skus) {
+      //console.log(skus)
+      var sortedskus = _.map(skus.data, "price")
+      if (sortedskus.includes(form.stripeAmount * 100)) {
+        existingSku = _.filter(skus.data, {'price': form.stripeAmount * 100});
+        newSku = existingSku[0].id;
+        console.log("This price already exists for the price: $" + form.stripeAmount + ", using sku: " + newSku);
+        completeOrder(form, newSku);
+      }
+      else {
+        stripe.skus.create({
+          product: form.productId,
+          attributes: {'loadedamount': form.stripeAmount},
+          price: form.stripeAmount * 100,
+          currency: 'usd',
+          inventory: {type: 'infinite'}
+        },
+          function(err, sku) {
+            newSku = sku.id;
+            console.log("$" + form.stripeAmount + " is a new price. We made a new sku: " + sku.id);
+            completeOrder(form, newSku);
+          }
+        )
+      }
+    })
+}
+
+function completeOrder(form, res, sku) {
+  var customerId;
+  stripe.customers.create({
+    email: form.stripeEmail,
+    source: form.stripeToken,
+    metadata: {
+      customer_phone: form.customer_phone
+    }
+    }, function(err, customer) {
+      console.log("!!!!!! CUSTOMER CREATED !!!!!!");
+      customerId = customer.id;
+      stripe.orders.create({
+        email: form.stripeEmail,
+        currency: "usd",
+        items: [
+          {
+            parent: sku,
+            currency: "usd",
+          }
+        ],
+        shipping: {
+          address: {
+            line1: form.shipping_address_line1,
+            line2: form.shipping_address_line2,
+            city: form.shipping_address_city,
+            state: form.shipping_address_state,
+            country: form.shipping_address_country,
+            postal_code: form.shipping_address_postal_code
+          }
+        },
+        metadata: {
+          giftcard_amount: form.stripeAmount,
+          customer_name: form.customer_name,
+          customer_phone: form.customer_phone,
+          recipient_name: form.recipient_name,
+        }
+        }, function(err, order) {
+          if (err) {
+            console.log("order didn't complete.")
+          }
+          console.log(order);
+          console.log("!!!!!! ORDER CREATED !!!!!!");
+          stripe.charges.create({
+            amount: form.amount,
+            currency: "usd",
+            customer: customerId,
+          }, function(err, charge) {
+            console.log("!!!!!! CHARGE CREATED !!!!!!");
+          });
+      });
+    });
+}
+
+app.post('/thanks', function (req, res) {
+  evaluateSku(req.body, res);
+  res.render("thanks.ejs")
+})
+
+// Listening
+
+app.listen(process.env.PORT || 7000);
