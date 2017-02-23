@@ -68,7 +68,20 @@ function getSku(form) {
   })
 }
 
+function deliveryMethod(method) {
+  if (method == "pickup") {
+    return "DO NOT SHIP"
+  }
+  if (method == "customer") {
+    return "ship to Customer"
+  }
+  if (method == "recipient") {
+    return "ship to Recipient"
+  }
+}
+
 function completeOrder(form, sku) {
+  //console.log("!!!!!! 1. SKU CONFIRMED !!!!!!");
   var customerId;
   stripe.customers.create({
     email: form.stripeEmail,
@@ -80,19 +93,38 @@ function completeOrder(form, sku) {
     if (err) {
       console.log(err)
     }
-    //console.log("!!!!!! 1. CUSTOMER CREATED !!!!!!");
+    //console.log("!!!!!! 2. CUSTOMER CREATED !!!!!!");
     customerId = customer.id;
+    deliveryMethod = deliveryMethod(form.shipping_preference);
     stripe.orders.create({
       items: [{
         parent: sku
       }],
       currency: "usd",
       email: form.stripeEmail,
+      shipping: {
+        name: form.recipient_name,
+        address: {
+          line1: form.shipping_address_line1,
+          city: form.shipping_address_city,
+          state: form.shipping_address_state,
+          postal_code: form.shipping_address_postal_code
+        }
+      },
+      metadata: {
+        giftcard_amount: '$' + form.stripeAmount,
+        delivery_method: deliveryMethod,
+        customer_name: form.customer_name,
+        customer_email: form.stripeEmail,
+        customer_phone: form.customer_phone,
+        recipient_name: form.recipient_name,
+        recipient_message: form.recipient_message
+      }
     }, function(err, order) {
       if (err) {
         console.log(err)
       }
-      //console.log("!!!!!! 2. ORDER CREATED !!!!!!");
+      //console.log("!!!!!! 3. ORDER CREATED !!!!!!");
       stripe.charges.create({
         amount: form.stripeAmount * 100,
         currency: "usd",
@@ -101,7 +133,7 @@ function completeOrder(form, sku) {
         if (err) {
           console.log(err)
         }
-        //console.log("!!!!!! 3. CHARGE CREATED !!!!!!");
+        //console.log("!!!!!! 4. CHARGE CREATED !!!!!!");
       });
     });
   });

@@ -2,23 +2,23 @@ $( document ).ready(function() {
 
   // TESTING ONLY: FORM AUTO FILL
 
-  $('[name="customer_name"]').val("Kurt Cobain");
-  $('[name="customer_phone"]').val("2064567890");
-  $('[name="recipient_name"]').val("Courtney Love");
-  $('[name="recipient_message"]').val("Why'd u kill me?");
-  $('#ShipToPickup').prop("checked", true);
-  $('[name="shipping_address_line1"]').val("171 Lake Washington Blvd E");
-  $('[name="shipping_address_line2"]').val("");
-  $('[name="shipping_address_city"]').val("Seattle");
-  $('[name="shipping_address_state"]').val("Washington");
-  $('[name="shipping_address_country"]').val("United States");
-  $('[name="shipping_address_postal_code"]').val("98112");
-  $('[name="stripeEmail"]').val("kurtyboy@hotmail.com");
-  $('[name="stripeAmount"]').val("123");
-  $('#cc').val("4242424242424242");
-  $('#ccm').val("12");
-  $('#ccy').val("19");
-  $('#cvv').val("123");
+  // $('[name="customer_name"]').val("Kurt Cobain");
+  // $('[name="customer_phone"]').val("2064567890");
+  // $('[name="recipient_name"]').val("Courtney Love");
+  // $('[name="recipient_message"]').val("Why'd u kill me?");
+  // $('#ShipToPickup').prop("checked", true);
+  // $('[name="shipping_address_line1"]').val("171 Lake Washington Blvd E");
+  // $('[name="shipping_address_line2"]').val("");
+  // $('[name="shipping_address_city"]').val("Seattle");
+  // $('[name="shipping_address_state"]').val("Washington");
+  // $('[name="shipping_address_country"]').val("United States");
+  // $('[name="shipping_address_postal_code"]').val("98112");
+  // $('[name="stripeEmail"]').val("kurtyboy@hotmail.com");
+  // $('[name="stripeAmount"]').val("123");
+  // $('#cc').val("4242424242424242");
+  // $('#ccm').val("12");
+  // $('#ccy').val("19");
+  // $('#cvv').val("123");
 
   // Populates "You will be charged.." dialogue before submit button
 
@@ -39,13 +39,13 @@ $( document ).ready(function() {
   $(".ShippingInformation").hide();
 
   $('.ShippingSelector').click(function() {
-    if($('#ShipToMe').is(':checked')) { 
+    if($('#ShipToMe').is(':checked')) {
       $(".ShippingInformation").show();
     }
-    if ($('#ShipToRecipient').is(':checked')) { 
+    if ($('#ShipToRecipient').is(':checked')) {
       $(".ShippingInformation").show();
     }
-    if ($('#ShipToPickup').is(':checked')) { 
+    if ($('#ShipToPickup').is(':checked')) {
       $(".ShippingInformation").hide();
     }
   });
@@ -60,13 +60,13 @@ $( document ).ready(function() {
       if ($(this).val().length == 0) {
        $(this).parent('.FormItem').removeClass('active');
       }
-      if ($(this).val() != '') {          
+      if ($(this).val() != '') {
         $(this).parent('.FormItem').addClass('active');
       }
     });
   });
 
-  // CLEVER ANIMATED SELECT FIELDS 
+  // CLEVER ANIMATED SELECT FIELDS
 
   $('.StateLabel').click(function() {
     $('.StateSelector select').focus();
@@ -164,7 +164,7 @@ $("#payment-form").submit(function(event) {
         error.prependTo(element.parents('.ShippingPreference'));
         // error.append('#ShippingHeadline');
       }
-      else { 
+      else {
         error.insertAfter(element);
       }
     }
@@ -183,32 +183,30 @@ $("#payment-form").submit(function(event) {
     Stripe.card.createToken($("#payment-form"), stripeResponseHandler);
     // Prevent the form from being submitted:
     return false;
-  }    
+  }
 });
 
 function renderErrors(errorString) {
   $('body, html').animate({ scrollTop: 0 }, 200);
   $('.FormErrorsCont').show();
-  setTimeout(function(){ 
-    $('.FormErrorsCont').addClass("Active"); 
-    $('.FormErrors').addClass("Active"); 
+  setTimeout(function(){
+    $('.FormErrorsCont').addClass("Active");
+    $('.FormErrors').addClass("Active");
     $('.FormErrors').text(errorString);
   }, 400);
 }
 
-// SENDING FORM 
+// SENDING FORM
 
 function stripeResponseHandler(status, response) {
   var $form = $('#payment-form');
-  if (response.error) { 
+  if (response.error) {
     renderErrors(response.error.message);
-    $form.find('.submit').prop('disabled', false); 
-  } else { 
+    $form.find('.submit').prop('disabled', false);
+  } else {
     var token = response.id;
     $form.append($('<input type="hidden" name="stripeToken">').val(token));
     console.log(token);
     $form.get(0).submit();
   }
 };
-
-
