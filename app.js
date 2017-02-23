@@ -81,7 +81,7 @@ function completeOrder(form, sku) {
     if (err) {
       console.log(err)
     }
-    console.log("!!!!!! 1. CUSTOMER CREATED !!!!!!");
+    //console.log("!!!!!! 1. CUSTOMER CREATED !!!!!!");
     customerId = customer.id;
     stripe.orders.create({
       items: [{
@@ -93,7 +93,7 @@ function completeOrder(form, sku) {
       if (err) {
         console.log(err)
       }
-      console.log("!!!!!! 2. ORDER CREATED !!!!!!");
+      //console.log("!!!!!! 2. ORDER CREATED !!!!!!");
       stripe.charges.create({
         amount: form.stripeAmount * 100,
         currency: "usd",
@@ -102,7 +102,7 @@ function completeOrder(form, sku) {
         if (err) {
           console.log(err)
         }
-        console.log("!!!!!! 3. CHARGE CREATED !!!!!!");
+        //console.log("!!!!!! 3. CHARGE CREATED !!!!!!");
       });
     });
   });
