@@ -34,84 +34,78 @@ function evaluateSku(form) {
   var newSku;
   stripe.skus.list({
     limit: 30
-  },
-    function(err, skus) {
-      if (err) {
-        // error
-      }
-      var sortedskus = _.map(skus.data, "price")
-      if (sortedskus.includes(form.stripeAmount * 100)) {
-        existingSku = _.filter(skus.data, {'price': form.stripeAmount * 100});
-        newSku = existingSku[0].id;
-        console.log("This price already exists for the price: $" + form.stripeAmount + ", using sku: " + newSku);
-        completeOrder(form, newSku);
-      }
-      else {
-        stripe.skus.create({
-          product: form.productId,
-          attributes: {'loadedamount': form.stripeAmount},
-          price: form.stripeAmount * 100,
-          currency: 'usd',
-          inventory: {type: 'infinite'}
+  }, function(err, skus) {
+    if (err) {
+      console.log(err)
+    }
+    var sortedskus = _.map(skus.data, "price")
+    if (sortedskus.includes(form.stripeAmount * 100)) {
+      existingSku = _.filter(skus.data, {
+        'price': form.stripeAmount * 100
+      });
+      newSku = existingSku[0].id;
+      console.log("This price already exists for the price: $" + form.stripeAmount + ", using sku: " + newSku);
+      completeOrder(form, newSku);
+    } else {
+      stripe.skus.create({
+        product: form.productId,
+        attributes: {
+          'loadedamount': form.stripeAmount
         },
-          function(err, sku) {
-            if (err) {
-              // error
-            }
-            newSku = sku.id;
-            console.log("$" + form.stripeAmount + " is a new price. We made a new sku: " + sku.id);
-            completeOrder(form, newSku);
-          }
-        )
-      }
-    })
+        price: form.stripeAmount * 100,
+        currency: 'usd',
+        inventory: {
+          type: 'infinite'
+        }
+      }, function(err, sku) {
+        if (err) {
+          console.log(err)
+        }
+        newSku = sku.id;
+        console.log("$" + form.stripeAmount + " is a new price. We made a new sku: " + sku.id);
+        completeOrder(form, newSku);
+      })
+    }
+  })
 }
 
 function completeOrder(form, sku) {
   var customerId;
-  var sku = sku;
-  var form = form;
   stripe.customers.create({
     email: form.stripeEmail,
     source: form.stripeToken,
     metadata: {
       customer_phone: form.customer_phone
     }
-    }, function(err, customer) {
+  }, function(err, customer) {
+    if (err) {
+      console.log(err)
+    }
+    console.log("!!!!!! 1. CUSTOMER CREATED !!!!!!");
+    customerId = customer.id;
+    stripe.orders.create({
+      items: [{
+        parent: sku
+      }],
+      currency: "usd",
+      email: form.stripeEmail,
+    }, function(err, order) {
       if (err) {
-        // error
+        console.log(err)
       }
-      console.log("!!!!!! CUSTOMER CREATED !!!!!!");
-      customerId = customer.id;
-      console.log("the sku is: " + sku);
-      stripe.orders.create({
-        items: [
-          {
-            parent: sku,
-          }
-        ],
+      console.log("!!!!!! 2. ORDER CREATED !!!!!!");
+      stripe.charges.create({
+        amount: form.stripeAmount * 100,
         currency: "usd",
-        email: form.stripeEmail,
-        }, function(err, order) {
-          if (err) {
-            // error
-          }
-          console.log("!!!!!! ORDER CREATED !!!!!!");
-          console.log(form.stripeAmount);
-          console.log(customerId);
-          stripe.charges.create({
-            amount: form.stripeAmount*100,
-            currency: "usd",
-            customer: customerId
-          }, function(err, charge) {
-            if (err) {
-              console.log(err)
-            }
-            console.log(charge);
-            console.log("!!!!!! CHARGE CREATED !!!!!!");
-          });
+        customer: customerId
+      }, function(err, charge) {
+        if (err) {
+          console.log(err)
+        }
+        console.log("!!!!!! 3. CHARGE CREATED !!!!!!");
       });
     });
+  });
 }
 
 app.post('/thanks', function (req, res) {
