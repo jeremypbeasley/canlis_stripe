@@ -39,13 +39,13 @@ $( document ).ready(function() {
   $(".ShippingInformation").hide();
 
   $('.ShippingSelector').click(function() {
-    if($('#ShipToMe').is(':checked')) { 
+    if($('#ShipToMe').is(':checked')) {
       $(".ShippingInformation").show();
     }
-    if ($('#ShipToRecipient').is(':checked')) { 
+    if ($('#ShipToRecipient').is(':checked')) {
       $(".ShippingInformation").show();
     }
-    if ($('#ShipToPickup').is(':checked')) { 
+    if ($('#ShipToPickup').is(':checked')) {
       $(".ShippingInformation").hide();
     }
   });
@@ -60,13 +60,13 @@ $( document ).ready(function() {
       if ($(this).val().length == 0) {
        $(this).parent('.FormItem').removeClass('active');
       }
-      if ($(this).val() != '') {          
+      if ($(this).val() != '') {
         $(this).parent('.FormItem').addClass('active');
       }
     });
   });
 
-  // CLEVER ANIMATED SELECT FIELDS 
+  // CLEVER ANIMATED SELECT FIELDS
 
   $('.StateLabel').click(function() {
     $('.StateSelector select').focus();
@@ -164,7 +164,7 @@ $("#payment-form").submit(function(event) {
         error.prependTo(element.parents('.ShippingPreference'));
         // error.append('#ShippingHeadline');
       }
-      else { 
+      else {
         error.insertAfter(element);
       }
     }
@@ -183,32 +183,30 @@ $("#payment-form").submit(function(event) {
     Stripe.card.createToken($("#payment-form"), stripeResponseHandler);
     // Prevent the form from being submitted:
     return false;
-  }    
+  }
 });
 
 function renderErrors(errorString) {
   $('body, html').animate({ scrollTop: 0 }, 200);
   $('.FormErrorsCont').show();
-  setTimeout(function(){ 
-    $('.FormErrorsCont').addClass("Active"); 
-    $('.FormErrors').addClass("Active"); 
+  setTimeout(function(){
+    $('.FormErrorsCont').addClass("Active");
+    $('.FormErrors').addClass("Active");
     $('.FormErrors').text(errorString);
   }, 400);
 }
 
-// SENDING FORM 
+// SENDING FORM
 
 function stripeResponseHandler(status, response) {
   var $form = $('#payment-form');
-  if (response.error) { 
+  if (response.error) {
     renderErrors(response.error.message);
-    $form.find('.submit').prop('disabled', false); 
-  } else { 
+    $form.find('.submit').prop('disabled', false);
+  } else {
     var token = response.id;
     $form.append($('<input type="hidden" name="stripeToken">').val(token));
     console.log(token);
     $form.get(0).submit();
   }
 };
-
-

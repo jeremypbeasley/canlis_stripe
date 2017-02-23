@@ -37,6 +37,8 @@
     "orchestrate": "^0.3.11",
     "pug": "latest",
     "q": "^1.0.1",
-    "stripe": "latest"
+    "stripe": "latest",
+    "pify": "latest",
+    "lodash": "latest"
   }
 }
