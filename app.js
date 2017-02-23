@@ -29,14 +29,16 @@ app.get("/", (req, res) =>
 // 4. Create an order for said sku.
 // 5. Create a charge.
 
-function evaluateSku(form, res) {
+function evaluateSku(form) {
   console.log(form);
   var newSku;
   stripe.skus.list({
     limit: 30
   },
     function(err, skus) {
-      //console.log(skus)
+      if (err) {
+        // error
+      }
       var sortedskus = _.map(skus.data, "price")
       if (sortedskus.includes(form.stripeAmount * 100)) {
         existingSku = _.filter(skus.data, {'price': form.stripeAmount * 100});
@@ -53,6 +55,9 @@ function evaluateSku(form, res) {
           inventory: {type: 'infinite'}
         },
           function(err, sku) {
+            if (err) {
+              // error
+            }
             newSku = sku.id;
             console.log("$" + form.stripeAmount + " is a new price. We made a new sku: " + sku.id);
             completeOrder(form, newSku);
@@ -62,8 +67,10 @@ function evaluateSku(form, res) {
     })
 }
 
-function completeOrder(form, res, sku) {
+function completeOrder(form, sku) {
   var customerId;
+  var sku = sku;
+  var form = form;
   stripe.customers.create({
     email: form.stripeEmail,
     source: form.stripeToken,
@@ -71,36 +78,23 @@ function completeOrder(form, res, sku) {
       customer_phone: form.customer_phone
     }
     }, function(err, customer) {
+      if (err) {
+        // error
+      }
       console.log("!!!!!! CUSTOMER CREATED !!!!!!");
       customerId = customer.id;
+      console.log("the sku is: " + sku);
       stripe.orders.create({
-        email: form.stripeEmail,
-        currency: "usd",
         items: [
           {
             parent: sku,
-            currency: "usd",
           }
         ],
-        shipping: {
-          address: {
-            line1: form.shipping_address_line1,
-            line2: form.shipping_address_line2,
-            city: form.shipping_address_city,
-            state: form.shipping_address_state,
-            country: form.shipping_address_country,
-            postal_code: form.shipping_address_postal_code
-          }
-        },
-        metadata: {
-          giftcard_amount: form.stripeAmount,
-          customer_name: form.customer_name,
-          customer_phone: form.customer_phone,
-          recipient_name: form.recipient_name,
-        }
+        currency: "usd",
+        email: form.stripeEmail,
         }, function(err, order) {
           if (err) {
-            console.log("order didn't complete.")
+            // error
           }
           console.log(order);
           console.log("!!!!!! ORDER CREATED !!!!!!");
