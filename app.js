@@ -96,13 +96,18 @@ function completeOrder(form, sku) {
           if (err) {
             // error
           }
-          console.log(order);
           console.log("!!!!!! ORDER CREATED !!!!!!");
+          console.log(form.stripeAmount);
+          console.log(customerId);
           stripe.charges.create({
-            amount: form.amount,
+            amount: form.stripeAmount*100,
             currency: "usd",
-            customer: customerId,
+            customer: customerId
           }, function(err, charge) {
+            if (err) {
+              console.log(err)
+            }
+            console.log(charge);
             console.log("!!!!!! CHARGE CREATED !!!!!!");
           });
       });
