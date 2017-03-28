@@ -81,20 +81,20 @@
     <p class="mt4">A shipping charge of $4.00 (tax included) will be added to your order.</p>
     <div class="FormItem">
       <label class="Caption">Address</label>
-      <input class="InputText" type="text" name="shipping_address_line1" autocomplete="shipping street-address">
+      <input class="InputText" type="text" name="shipping_address_line1" autocomplete="address-line1">
     </div>
     <div class="FormItem">
       <label class="Caption">Address (cont.)</label>
-      <input class="InputText" type="text" name="shipping_address_line2" >
+      <input class="InputText" type="text" name="shipping_address_line2" autocomplete="address-line2">
     </div>
     <div class="FormItem">
       <label class="Caption">City</label>
-      <input class="InputText" type="text" name="shipping_address_city" autocomplete="shipping locality">
+      <input class="InputText" type="text" name="shipping_address_city" autocomplete="address-level2">
     </div>
     <div class="FormItem">
       <div class="StateSelector">
         <label class="Caption StateLabel">State</label>
-        <select name="shipping_address_state" class="Default" autocomplete="shipping region">
+        <select name="shipping_address_state" class="Default" autocomplete="address-level1">
           <option value="">State</option>
           <option value="AL">Alabama</option>
           <option value="AK">Alaska</option>
@@ -152,7 +152,7 @@
     </div>
     <div class="FormItem">
       <label class="Caption">Postal Code</label>
-      <input class="InputText" type="tel" name="shipping_address_postal_code" autocomplete="shipping postal-code">
+      <input class="InputText" type="tel" name="shipping_address_postal_code" autocomplete="postal-code">
     </div>
   </div>
   <p class="Display2 mt5 ">Payment</p>
@@ -162,11 +162,11 @@
   </div>
   <div class="FormItem Expiration Month">
     <label class="Caption">Exp. (MM)</label>
-    <input class="InputText" type="tel" size="2" data-stripe="exp_month" id="ccm" maxlength="2">
+    <input class="InputText" type="tel" size="2" data-stripe="exp_month" id="ccm" maxlength="2" autocomplete="cc-exp-month">
   </div>
   <div class="FormItem Expiration">
     <label class="Caption">Exp. (YY)</label>
-    <input class="InputText" type="tel" size="2" data-stripe="exp_year" id="ccy" maxlength="2">
+    <input class="InputText" type="tel" size="2" data-stripe="exp_year" id="ccy" maxlength="2" autocomplete="cc-exp-year">
   </div>
   <div class="FormItem Expiration">
     <label class="Caption">Security Code</label>
