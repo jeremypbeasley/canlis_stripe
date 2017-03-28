@@ -20,9 +20,6 @@ form {
     margin: 10%;
   }
 }
-/*.FormItem {
-  margin-bottom: 30px;
-}*/
 hr {
   display: none;
 }
@@ -130,24 +127,6 @@ label.error {
 .FormItem.Expiration.Month {
   margin-right: 15px;
 }
-/*
-.ShippingSelector {
-  width: 100%;
-  border: none;
-  margin-bottom: -1px;
-  display: block;
-  padding: 20px 0px;
-}
-.ShippingSelector:nth-child(1) {
-  border-bottom: 1px solid #ccc;
-}
-.ShippingSelector:nth-child(3) {
-  border-top: 1px solid #ccc;
-}
-.ShippingSelector span {
-  margin-left: 1rem;
-}*/
-
 .ShippingPreference {
   display: block;
   overflow: auto;
@@ -299,12 +278,3 @@ input[type=submit] {
   transform: translateY(0px);
   opacity: 1;
 }
-
-
-/*.payment-errors {
-  border: 1px solid red;
-  padding: 20px;
-  margin-bottom: 30px;
-  color: red;
-}
-*/
