@@ -1,4 +1,4 @@
-// Dependencies
+// Declare dependencies
 
 require('dotenv').config()
 const keyPublishable = process.env.keyPublishable;
@@ -14,13 +14,13 @@ app.set('view engine', 'ejs');
 var _ = require("lodash");
 var getJSON = require('get-json');
 
-// Initialize
+// Initialize the app
 
 app.get("/", (req, res) =>
   res.render("index.ejs", {keyPublishable}));
   console.log('Listening at http://localhost:7000/')
 
-// Form submission
+// Submit the form
 
 function getSku(form) {
   var newSku;
@@ -153,6 +153,8 @@ function completeOrder(form, sku) {
   });
 }
 
+// Update shipping in completeOrder
+
 function updateShipping(orderId, methods, isFree) {
   if (isFree) {
     console.log("SHIPPING: FREE");
@@ -171,6 +173,8 @@ function updateShipping(orderId, methods, isFree) {
     selected_shipping_method: shippingId
   })
 }
+
+// Route for when the form is submitted
 
 app.post('/thanks', function (req, res) {
   getSku(req.body);
