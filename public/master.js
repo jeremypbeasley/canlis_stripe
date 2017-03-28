@@ -26,8 +26,10 @@ $( document ).ready(function() {
   var enteredAmount;
 
   function showTotalCharge() {
-    totalCharge = enteredAmount + shippingCost;
-    $("#YouWillBeCharged").show().text("You will be charged a total of $" + totalCharge + ".00");
+    if (enteredAmount) {
+      totalCharge = enteredAmount + shippingCost;
+      $("#YouWillBeCharged").show().text("You will be charged a total of $" + totalCharge + ".00");
+    }
   }
 
   $("#YouWillBeCharged").hide()
