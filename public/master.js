@@ -22,15 +22,21 @@ $( document ).ready(function() {
 
   // Populates "You will be charged.." dialogue before submit button
 
+  var shippingCost = 0;
+  var enteredAmount;
+
+  function showTotalCharge() {
+    totalCharge = enteredAmount + shippingCost;
+    $("#YouWillBeCharged").show().text("You will be charged a total of $" + totalCharge + ".00");
+  }
+
   $("#YouWillBeCharged").hide()
   $(".GiftAmount input").keyup(function() {
-      var value = Number($(this).val());
-      if (value) {
-          var shippingCost = 4;
-          var totalCharge = value + shippingCost;
-          $("#YouWillBeCharged").show().text("You will be charged a total of $" + totalCharge + ".00");
+      enteredAmount = Number($(this).val());
+      if (enteredAmount) {
+        showTotalCharge();
       } else {
-          $("#YouWillBeCharged").hide().text("");
+        $("#YouWillBeCharged").hide().text("");
       };
   }).keyup();
 
@@ -41,12 +47,18 @@ $( document ).ready(function() {
   $('.ShippingSelector').click(function() {
     if($('#ShipToMe').is(':checked')) {
       $(".ShippingInformation").show();
+      shippingCost = 4;
+      showTotalCharge();
     }
     if ($('#ShipToRecipient').is(':checked')) {
       $(".ShippingInformation").show();
+      shippingCost = 4;
+      showTotalCharge();
     }
     if ($('#ShipToPickup').is(':checked')) {
       $(".ShippingInformation").hide();
+      shippingCost = 0;
+      showTotalCharge();
     }
   });
 
@@ -81,7 +93,7 @@ $( document ).ready(function() {
   });
 });
 
-// FORM VALIDATION
+// FORM VALIDATION & ERROR MESSAGES
 
 Stripe.setPublishableKey('pk_test_Gbu2akKhNgGjbKi4LPxOOWqc');
 
@@ -170,13 +182,13 @@ $("#payment-form").submit(function(event) {
     }
   });
   if(!$("#payment-form").valid()){
-    console.log("aint valid");
+    // console.log("aint valid");
     $('body, html').animate({ scrollTop: 0 }, 200);
     event.preventDefault();
     return false;
   }
   if($("#payment-form").valid()){
-    console.log("is valid");
+    // console.log("is valid");
     // Disable the submit button to prevent repeated clicks:
     $(this).find('.submit').prop('disabled', true);
     // Request a token from Stripe:

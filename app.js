@@ -22,14 +22,6 @@ app.get("/", (req, res) =>
 
 // Form submission
 
-// Stripe requires a very particular order of functions here.
-// 1. You must evaluate a sku for a product. Unfortunately, Stripe does not support a variable price on a product. The only way to do this is to create multiple skus of one product, each with their own price. You can create a sku at the time of purchase but since the only attribute of the sku is price, you'll get an error back if you try to make a new sku for a price that's already been created by another customer. You must query the existing skus to see if ones already exists with the price your customer has entered. If there is not, you proceed with a new sku. If there is, you must use that existing sku.
-// 2. Create a new customer.
-// 3. Create an order for said sku.
-// 4. Create a charge.
-// Note: be sure your productId (defined in index.ejs) matches your "Gift Card" product in Stripe. Also make sure this product has the attribute "loadedamount".
-// if you get lost, Stripe's API docs are super concise: https://stripe.com/docs/api
-
 function getSku(form) {
   console.log(form);
   var newSku;
@@ -68,21 +60,29 @@ function getSku(form) {
   })
 }
 
-function deliveryMethod(method) {
-  if (method == "pickup") {
-    return "DO NOT SHIP"
+function updateShipping(orderId, methods, isFree) {
+  if (isFree) {
+    console.log("SHIPPING: FREE");
+    function getFreeMethodId(method) {
+      return method.amount === 0;
+    }
+    var shippingId = methods.find(getFreeMethodId).id;
+  } else {
+    console.log("SHIPPING: NOT FREE");
+    function getNotFreeMethodId(method) {
+      return method.amount === 400;
+    }
+    var shippingId = methods.find(getNotFreeMethodId).id;
   }
-  if (method == "customer") {
-    return "ship to Customer"
-  }
-  if (method == "recipient") {
-    return "ship to Recipient"
-  }
+  stripe.orders.update(orderId, {
+    selected_shipping_method: shippingId
+  })
 }
 
 function completeOrder(form, sku) {
   //console.log("!!!!!! 1. SKU CONFIRMED !!!!!!");
   var customerId;
+  var orderTotal = form.stripeAmount * 100;
   stripe.customers.create({
     email: form.stripeEmail,
     source: form.stripeToken,
@@ -95,7 +95,6 @@ function completeOrder(form, sku) {
     }
     //console.log("!!!!!! 2. CUSTOMER CREATED !!!!!!");
     customerId = customer.id;
-    deliveryMethod = deliveryMethod(form.shipping_preference);
     stripe.orders.create({
       items: [{
         parent: sku
@@ -113,7 +112,6 @@ function completeOrder(form, sku) {
       },
       metadata: {
         giftcard_amount: '$' + form.stripeAmount,
-        delivery_method: deliveryMethod,
         customer_name: form.customer_name,
         customer_email: form.stripeEmail,
         customer_phone: form.customer_phone,
@@ -124,16 +122,40 @@ function completeOrder(form, sku) {
       if (err) {
         console.log(err)
       }
-      //console.log("!!!!!! 3. ORDER CREATED !!!!!!");
+      // Determining if we need to charge for shipping
+      var isFreeShipping;
+      if (form.shipping_preference == "pickup") {
+        isFreeShipping = true;
+      } else {
+        isFreeShipping = false;
+      }
+      // Updating shipping
+      if (isFreeShipping) {
+        console.log("SHIPPING: FREE");
+        function getFreeMethodId(method) {
+          return method.amount === 0;
+        }
+        var shippingId = order.shipping_methods.find(getFreeMethodId).id;
+        orderTotal += order.shipping_methods.find(getFreeMethodId).amount;
+      } else {
+        console.log("SHIPPING: NOT FREE");
+        function getNotFreeMethodId(method) {
+          return method.amount === 400;
+        }
+        var shippingId = order.shipping_methods.find(getNotFreeMethodId).id;
+        orderTotal += order.shipping_methods.find(getNotFreeMethodId).amount;
+      }
+      stripe.orders.update(order.id, {
+        selected_shipping_method: shippingId
+      });
       stripe.charges.create({
-        amount: form.stripeAmount * 100,
+        amount: orderTotal,
         currency: "usd",
         customer: customerId
       }, function(err, charge) {
         if (err) {
           console.log(err)
         }
-        //console.log("!!!!!! 4. CHARGE CREATED !!!!!!");
       });
     });
   });
