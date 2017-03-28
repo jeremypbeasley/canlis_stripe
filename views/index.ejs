@@ -51,7 +51,9 @@
   </div>
   <div class="FormItem">
     <label class="Caption">Recipient's Name</label>
-    <input class="InputText" type="text" name="recipient_name" autocomplete="off">
+    <input class="InputText" type="text" name="recipient_name" autocomplete="off" readonly onfocus="if (this.hasAttribute('readonly')) {this.removeAttribute('readonly');
+    // fix for mobile safari to show virtual keyboard
+    this.blur(); this.focus();  }" />
   </div>
   <div class="FormItem">
     <label class="Caption">Message (Optional)</label>
