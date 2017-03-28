@@ -39,19 +39,19 @@
   </div>
   <div class="FormItem">
     <label class="Caption">Your Name</label>
-    <input class="InputText" type="text" data-stripe="name" name="customer_name">
+    <input class="InputText" type="text" data-stripe="name" name="customer_name" autocomplete="name">
   </div>
   <div class="FormItem">
     <label class="Caption">Your Email</label>
-    <input class="InputText" type="email" name="stripeEmail">
+    <input class="InputText" type="email" name="stripeEmail" autocomplete="email">
   </div>
   <div class="FormItem">
     <label class="Caption">Your Phone Number</label>
-    <input class="InputText" type="tel" name="customer_phone" >
+    <input class="InputText" type="tel" name="customer_phone" autocomplete="phone">
   </div>
   <div class="FormItem">
     <label class="Caption">Recipient's Name</label>
-    <input class="InputText" type="text" name="recipient_name">
+    <input class="InputText" type="text" name="recipient_name" autocomplete="off">
   </div>
   <div class="FormItem">
     <label class="Caption">Message (Optional)</label>
@@ -81,7 +81,7 @@
     <p class="mt4">A shipping charge of $4.00 (tax included) will be added to your order.</p>
     <div class="FormItem">
       <label class="Caption">Address</label>
-      <input class="InputText" type="text" name="shipping_address_line1" >
+      <input class="InputText" type="text" name="shipping_address_line1" autocomplete="shipping street-address">
     </div>
     <div class="FormItem">
       <label class="Caption">Address (cont.)</label>
@@ -89,12 +89,12 @@
     </div>
     <div class="FormItem">
       <label class="Caption">City</label>
-      <input class="InputText" type="text" name="shipping_address_city" >
+      <input class="InputText" type="text" name="shipping_address_city" autocomplete="shipping locality">
     </div>
     <div class="FormItem">
       <div class="StateSelector">
         <label class="Caption StateLabel">State</label>
-        <select name="shipping_address_state" class="Default">
+        <select name="shipping_address_state" class="Default" autocomplete="shipping region">
           <option value="">State</option>
           <option value="AL">Alabama</option>
           <option value="AK">Alaska</option>
@@ -152,13 +152,13 @@
     </div>
     <div class="FormItem">
       <label class="Caption">Postal Code</label>
-      <input class="InputText" type="tel" name="shipping_address_postal_code" >
+      <input class="InputText" type="tel" name="shipping_address_postal_code" autocomplete="shipping postal-code">
     </div>
   </div>
   <p class="Display2 mt5 ">Payment</p>
   <div class="FormItem">
     <label class="Caption">Card Number</label>
-    <input class="InputText" type="tel" data-stripe="number" id="cc" maxlength="16">
+    <input class="InputText" type="tel" data-stripe="number" id="cc" maxlength="16" autocomplete="cc-number">
   </div>
   <div class="FormItem Expiration Month">
     <label class="Caption">Exp. (MM)</label>
@@ -170,7 +170,7 @@
   </div>
   <div class="FormItem Expiration">
     <label class="Caption">Security Code</label>
-    <input class="InputText" type="tel" size="4" data-stripe="cvc" id="cvv" maxlength="4">
+    <input class="InputText" type="tel" size="4" data-stripe="cvc" id="cvv" maxlength="4" autocomplete="cc-csc">
   </div>
   <p id="YouWillBeCharged" class="mt4"></p>
   <input type="submit" class="submit Caption mt5" value="Purchase">
