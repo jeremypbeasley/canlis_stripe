@@ -31,7 +31,7 @@ app.get("/", (req, res) =>
 // if you get lost, Stripe's API docs are super concise: https://stripe.com/docs/api
 
 function getSku(form) {
-  console.log(form);
+  //console.log(form);
   var newSku;
   stripe.skus.list({
     limit: 30
@@ -80,6 +80,25 @@ function deliveryMethod(method) {
   }
 }
 
+function updateShipping(orderId, methods, isFree) {
+  if (isFree) {
+    console.log("SHIPPING: FREE");
+    function getFreeMethodId(method) {
+      return method.amount === 0;
+    }
+    var shippingId = methods.find(getFreeMethodId).id;
+  } else {
+    console.log("SHIPPING: NOT FREE");
+    function getNotFreeMethodId(method) {
+      return method.amount === 400;
+    }
+    var shippingId = methods.find(getNotFreeMethodId).id;
+  }
+  stripe.orders.update(orderId, {
+    selected_shipping_method: shippingId
+  })
+}
+
 function completeOrder(form, sku) {
   //console.log("!!!!!! 1. SKU CONFIRMED !!!!!!");
   var customerId;
@@ -124,6 +143,7 @@ function completeOrder(form, sku) {
       if (err) {
         console.log(err)
       }
+      updateShipping(order.id, order.shipping_methods, false);
       //console.log("!!!!!! 3. ORDER CREATED !!!!!!");
       stripe.charges.create({
         amount: form.stripeAmount * 100,
