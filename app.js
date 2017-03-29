@@ -176,7 +176,6 @@ function updateShipping(orderId, methods, isFree) {
 }
 
 // Route for when the form is submitted
-
 app.post('/thanks', function (req, res) {
   var onComplete = (err, result) => {
     if (err) {
@@ -186,6 +185,23 @@ app.post('/thanks', function (req, res) {
     }
     res.render("thanks.ejs")
   };
+
+  getSku(form, (err, sku) => {
+    if (err) {
+      console.log('sku failed');
+    }
+    createCustomer(form, (err, customer) => {
+      if (err) {
+        console.log('cust failed');
+      }
+      createOrder(sku, form, (err, order) => {
+        if (err) {
+          console.log('order creation failed');
+        }
+        chargeCustomer(customer, order, onComplete);
+      })
+    })
+  })
 
   getSku(req.body, onComplete);
 })
