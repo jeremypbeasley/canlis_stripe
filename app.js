@@ -7,12 +7,13 @@ const express = require('express')
 const app = express()
 const stripe = require("stripe")(keySecret);
 const bodyParser = require('body-parser')
+const _ = require("lodash");
+const getJSON = require('get-json');
+
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(express.static('public'));
 app.set('view engine', 'ejs');
-var _ = require("lodash");
-var getJSON = require('get-json');
 
 // Initialize the app
 
@@ -21,8 +22,7 @@ app.get("/", (req, res) =>
   console.log('Listening at http://localhost:7000/')
 
 // Submit the form
-
-function getSku(form) {
+function getSku(form, onComplete) {
   var newSku;
   // get all existing skus and list them out
   stripe.skus.list({
@@ -40,7 +40,7 @@ function getSku(form) {
         'price': form.stripeAmount * 100
       });
       // use the existing sku
-      completeOrder(form, existingSku[0].id);
+      completeOrder(form, existingSku[0].id, onComplete);
     } else {
       // or if it doesn't, just make a new one
       stripe.skus.create({
@@ -59,13 +59,13 @@ function getSku(form) {
           console.log(err)
         }
         //now you've got a sku, proceed to contruct the customer, order, and charge
-        completeOrder(form, sku.id);
+        completeOrder(form, sku.id, onComplete);
       })
     }
   })
 }
 
-function completeOrder(form, sku) {
+function completeOrder(form, sku, onComplete) {
   // so now we have a sku, let's define some global variables that we're going to update along the way
   var customerId;
   var orderTotal = form.stripeAmount * 100;
@@ -145,6 +145,7 @@ function completeOrder(form, sku) {
         if (err) {
           console.log(err)
         }
+        onComplete();
         // ok, now everything's done. Form Success! Render thank you page.
         // TEST LOG
         // console.log("TOTAL CHARGE: $" + charge.amount / 100);
@@ -177,9 +178,16 @@ function updateShipping(orderId, methods, isFree) {
 // Route for when the form is submitted
 
 app.post('/thanks', function (req, res) {
-  getSku(req.body);
-  // rendering the thanks screen should not happen here, it should happen on 150 when the entire form is complete.
-  res.render("thanks.ejs")
+  var onComplete = (err, result) => {
+    if (err) {
+      console.log("Oh shit!");
+      res.render("shit.ejs");
+      return;
+    }
+    res.render("thanks.ejs")
+  };
+
+  getSku(req.body, onComplete);
 })
 
 // Listening
