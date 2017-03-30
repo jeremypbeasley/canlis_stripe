@@ -21,49 +21,44 @@ app.get("/", (req, res) =>
   res.render("index.ejs", {keyPublishable}));
   console.log('Listening at http://localhost:7000/')
 
-// Submit the form
-function getSku(form, onComplete) {
-  var newSku;
-  // get all existing skus and list them out
-  stripe.skus.list({
-    limit: 30
-  }, function(err, skus) {
-    if (err) {
-      console.log(err)
-    }
-    // make a list of price-points that already exist for the gift card
-    var sortedskus = _.map(skus.data, "price")
-    // see if the price we're trying to submit already exists
-    if (sortedskus.includes(form.stripeAmount * 100)) {
-      existingSku = _.filter(skus.data, {
-        // since the form is submitting an integer, we must make it make "cents"
-        'price': form.stripeAmount * 100
-      });
-      // use the existing sku
-      completeOrder(form, existingSku[0].id, onComplete);
-    } else {
-      // or if it doesn't, just make a new one
-      stripe.skus.create({
-        product: form.productId,
-        attributes: {
-          'loadedamount': form.stripeAmount
-        },
-        // since the form is submitting an integer, we must make it make "cents"
-        price: form.stripeAmount * 100,
-        currency: 'usd',
-        inventory: {
-          type: 'infinite'
-        }
-      }, function(err, sku) {
-        if (err) {
-          console.log(err)
-        }
-        //now you've got a sku, proceed to contruct the customer, order, and charge
-        completeOrder(form, sku.id, onComplete);
-      })
-    }
-  })
-}
+
+
+// function getSku(form, onComplete) {
+//   var newSku;
+//   // get all existing skus and list them out
+//   stripe.skus.list({
+//     limit: 30
+//   }, function(err, skus) {
+//     if (err) {
+//       console.log(err)
+//     }
+//     // make a list of price-points that already exist for the gift card
+//     var sortedskus = _.map(skus.data, "price")
+//     // see if the price we're trying to submit already exists
+//     if (sortedskus.includes(form.stripeAmount * 100)) {
+//       existingSku = _.filter(skus.data, {
+//         // since the form is submitting an integer, we must make it make "cents"
+//         'price': form.stripeAmount * 100
+//       });
+//       // use the existing sku
+//       //completeOrder(form, existingSku[0].id, onComplete);
+//     } else {
+//       // or if it doesn't, just make a new one
+//       stripe.skus.create({
+//         product: form.productId,
+//         attributes: {
+//           'loadedamount': form.stripeAmount
+//         },
+//         // since the form is submitting an integer, we must make it make "cents"
+//         price: form.stripeAmount * 100,
+//         currency: 'usd',
+//         inventory: {
+//           type: 'infinite'
+//         }
+//
+//     }
+//   })
+// }
 
 function completeOrder(form, sku, onComplete) {
   // so now we have a sku, let's define some global variables that we're going to update along the way
@@ -175,37 +170,20 @@ function updateShipping(orderId, methods, isFree) {
   })
 }
 
-// Route for when the form is submitted
+
+function getSku(form, callback) {
+  callback(null, form.productId);
+}
+
 app.post('/thanks', function (req, res) {
-  var onComplete = (err, result) => {
+  getSku(req.body, function(err, sku) {
     if (err) {
-      console.log("Oh shit!");
-      res.render("shit.ejs");
-      return;
+      console.log(err)
     }
-    res.render("thanks.ejs")
-  };
-
-  getSku(form, (err, sku) => {
-    if (err) {
-      console.log('sku failed');
-    }
-    createCustomer(form, (err, customer) => {
-      if (err) {
-        console.log('cust failed');
-      }
-      createOrder(sku, form, (err, order) => {
-        if (err) {
-          console.log('order creation failed');
-        }
-        chargeCustomer(customer, order, onComplete);
-      })
-    })
-  })
-
-  getSku(req.body, onComplete);
+    console.log(sku);
+    res.render("thanks.ejs");
+  });
 })
-
 // Listening
 
 app.listen(process.env.PORT || 7000);
