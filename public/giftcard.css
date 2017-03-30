@@ -6,7 +6,7 @@ html {
     font-size: 15px;
   }
 }
-form {
+/*form {
   margin: 6vw;
   max-width: 400px;
 }
@@ -19,7 +19,7 @@ form {
   form {
     margin: 10%;
   }
-}
+}*/
 hr {
   display: none;
 }
