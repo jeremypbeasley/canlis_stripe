@@ -193,7 +193,9 @@ $("#payment-form").submit(function(event) {
   if($("#payment-form").valid()){
     // console.log("is valid");
     // Disable the submit button to prevent repeated clicks:
-    $(this).find('.submit').prop('disabled', true);
+    $(this).find('.SubmitButton').prop('disabled', true);
+    // make the submit button spinning to show progress
+    $(this).find('.SubmitButton').addClass('Loading');
     // Request a token from Stripe:
     Stripe.card.createToken($("#payment-form"), stripeResponseHandler);
     // Prevent the form from being submitted:
@@ -217,7 +219,7 @@ function stripeResponseHandler(status, response) {
   var $form = $('#payment-form');
   if (response.error) {
     renderErrors(response.error.message);
-    $form.find('.submit').prop('disabled', false);
+    $form.find('.SubmitButton').prop('disabled', false);
   } else {
     var token = response.id;
     $form.append($('<input type="hidden" name="stripeToken">').val(token));

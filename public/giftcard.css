@@ -46,7 +46,7 @@ input.InputGiftAmount {
   background-color: transparent;
   padding: 0px 0 20px 25px;
   font-size: 45px;
-  font-family: "GTSectraDisplayTrialLight", Times, Georgia, serif;
+  font-family:'GTSectraDisplayLight', Times, Georgia, serif;
 }
 @media (min-width: 1024px) {
   input.InputGiftAmount {
@@ -64,7 +64,7 @@ input.InputGiftAmount {
   left: -3px;
   font-size: 45px;
   line-height: 125%;
-  font-family: "GTSectraDisplayTrialLight", Times, Georgia, serif;
+  font-family: "GTSectraDisplayLight", Times, Georgia, serif;
 }
 @media (min-width: 62em) {
   .GiftAmount:before {
@@ -78,7 +78,7 @@ input.InputText {
   border-bottom: 1px solid #ccc;
   border-radius: 0;
   padding: 15px 0 5px 0;
-  font-family: "GTSectraTrialBook", Times, Georgia, serif;
+  font-family: "GTSectraBook", Times, Georgia, serif;
   background: transparent;
   transition: all 200ms ease-out;
   outline: none;
@@ -204,15 +204,6 @@ input[type=radio]:checked ~ .check::before{
 input[type=radio]:checked ~ label{
   color: black;
 }
-input[type=submit] {
-  width: 100%;
-  background: black;
-  padding: 20px;
-  border: none;
-  color: white;
-  text-align: center;
-  border-radius: 0;
-}
 .FormItem .StateLabel {
   top: 10;
   position: absolute;
@@ -277,4 +268,54 @@ input[type=submit] {
 .FormErrors.Active{
   transform: translateY(0px);
   opacity: 1;
+}
+.SubmitButton {
+  background: black;
+  padding: 20px 40px;
+  border: none;
+  color: white;
+  display: block;
+  text-align: center;
+  border-radius: 1000px;
+  /*border: 1px solid #000;
+  box-shadow: 5px 5px 0px 0px #000;*/
+  position: relative;
+  outline: none;
+  font-family: "GTSectraBook", Times, Georgia, serif;
+  font-size: 20px;
+}
+.SubmitButton span {
+  position: relative;
+  left: 0;
+  transition: all 100ms ease-out;
+}
+.LoadingSpinner {
+  animation-duration: .75s;
+  animation-iteration-count: infinite;
+  animation-name: rotate-forever;
+  animation-timing-function: linear;
+  transition: all 200ms ease-out;
+  height: 20px;
+  width: 20px;
+  border: 2px solid white;
+  border-right-color: transparent;
+  border-radius: 50%;
+  display: inline-block;
+  opacity: 0;
+  position: absolute;
+  top: 20px;
+  left: 23px;
+  transform: scale(.5)
+}
+.SubmitButton.Loading .LoadingSpinner {
+  opacity: 1;
+  transform: scale(1)
+}
+.SubmitButton.Loading span {
+  left: 15px;
+}
+
+@keyframes rotate-forever {
+  0%    { transform: rotate(0deg) }
+  100%  { transform: rotate(360deg) }
 }

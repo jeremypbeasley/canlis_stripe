@@ -9,7 +9,7 @@ const stripe = require("stripe")(keySecret);
 stripe.setApiVersion('2017-02-14');
 const bodyParser = require('body-parser')
 const _ = require("lodash");
-const getJSON = require('get-json');
+// const getJSON = require('get-json');
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
