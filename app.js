@@ -9,7 +9,7 @@ const stripe = require("stripe")(keySecret);
 stripe.setApiVersion('2017-02-14');
 const bodyParser = require('body-parser')
 const _ = require("lodash");
-// const getJSON = require('get-json');
+const getJSON = require('get-json');
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
@@ -24,6 +24,7 @@ app.get("/", (req, res) =>
 
 // Functions to perform transaction with Stripe
 function buyGiftCard(form, callback) {
+  //console.log(form);
   getSkuList((err, skuList) => {
     if (err) {}
     chooseSku(form, skuList, (err, chosenSku) => {
