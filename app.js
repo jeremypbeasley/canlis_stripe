@@ -106,6 +106,12 @@ function createCustomer(form, callback) {
 }
 
 function createOrder(form, chosenSku, callback) {
+var recipient_message;
+  if (!form.recipient_message) {
+    recipient_message = "No message provided.";
+  } else {
+    recipient_message = form.recipient_message;
+  }
   stripe.orders.create({
     items: [{
       type: 'sku',
@@ -129,7 +135,7 @@ function createOrder(form, chosenSku, callback) {
       customer_email: form.stripeEmail,
       customer_phone: form.customer_phone,
       recipient_name: form.recipient_name,
-      recipient_message: form.recipient_message
+      recipient_message: recipient_message
     }
   }, function(err, order) {
     if (err) {

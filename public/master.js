@@ -96,9 +96,21 @@ $( document ).ready(function() {
   });
 });
 
+// ERASE ADDRESS AUTOCOMPLETE IF "PICK UP AT CANLIS" IS SELECTED
+
+$('#ShipToPickup').click(function() {
+  $('[name="shipping_address_line1"]').val("");
+  $('[name="shipping_address_line2"]').val("");
+  $('[name="shipping_address_city"]').val("");
+  $('[name="shipping_address_state"]').val("");
+  $('[name="shipping_address_country"]').val("");
+  $('[name="shipping_address_postal_code"]').val("");
+});
+
+
 // FORM VALIDATION & ERROR MESSAGES
 
-Stripe.setPublishableKey('pk_test_Gbu2akKhNgGjbKi4LPxOOWqc');
+Stripe.setPublishableKey('pk_test_qHOVbF8lzJGlNt53WAbNIGim');
 
 $("#payment-form").submit(function(event) {
   $("#payment-form").validate({
