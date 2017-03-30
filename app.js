@@ -170,7 +170,7 @@ function updateShipping(orderId, methods, isFree) {
   })
 }
 
-function getSku(form, callback) {
+function getSkuList(form, callback) {
   stripe.skus.list({
     limit: 30
   }, function(err, skus) {
@@ -182,15 +182,41 @@ function getSku(form, callback) {
   )
 }
 
-app.post('/thanks', function (req, res) {
-  getSku(req.body, function(err, sku) {
+// function createNewSku(form, callback) {
+//   // make a new sku
+//   stripe.skus.create({
+//     product: form.productId,
+//     attributes: {
+//       'loadedamount': form.stripeAmount
+//     },
+//     // since the form is submitting an integer, we must make it make "cents"
+//     price: form.stripeAmount * 100,
+//     currency: 'usd',
+//     inventory: {
+//       type: 'infinite'
+//     }
+//   }, function(err, sku) {
+//     if (err) {
+//       console.log(err);
+//     }
+//     // use new sku
+//     callback(null, sku);
+//   }
+// }
+
+function buyGiftCard(err, onComplete) {
+  getSkuList(req.body, function(err, sku) {
     if (err) {
       console.log(err)
     }
     console.log(sku);
     res.render("thanks.ejs");
   });
-})
-// Listening
+}
 
+app.post('/thanks', function (req, res) {
+
+})
+
+// Listening
 app.listen(process.env.PORT || 7000);
