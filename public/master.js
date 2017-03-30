@@ -19,6 +19,7 @@ $( document ).ready(function() {
   $('#ccy').val("19");
   $('#cvv').val("123");
   $('.FormItem').addClass("active");
+  $('.InputGiftAmount').val("123");
 
   // Populates "You will be charged.." dialogue before submit button
 

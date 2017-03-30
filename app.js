@@ -170,9 +170,19 @@ function updateShipping(orderId, methods, isFree) {
   })
 }
 
-
 function getSku(form, callback) {
-  callback(null, form.productId);
+  console.log('start getSku');
+  stripe.skus.list({
+    limit: 30
+  }, function(err, skus) {
+      if (err) {
+        console.log(err);
+        console.log('err in getSku');
+      }
+      console.log('success getSku');
+      callback(null, skus);
+    }
+  )
 }
 
 app.post('/thanks', function (req, res) {
