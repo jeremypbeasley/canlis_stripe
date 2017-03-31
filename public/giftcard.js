@@ -111,6 +111,7 @@ $('#ShipToPickup').click(function() {
 // FORM VALIDATION & ERROR MESSAGES
 
 Stripe.setPublishableKey('pk_live_4kvjDESffDHa3yDxThoVTXUK');
+// Stripe.setPublishableKey('pk_test_qHOVbF8lzJGlNt53WAbNIGim');
 
 $("#payment-form").submit(function(event) {
   $("#payment-form").validate({
