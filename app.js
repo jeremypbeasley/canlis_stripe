@@ -40,9 +40,9 @@ function buyGiftCard(form, callback) {
             if (err) {}
             createCharge(customer, orderTotal, (err, chargedeets) => {
               if (err) {}
+              callback(null, chargedeets);
               mailchimpAddSub(order.email);
               sendReceipt(order);
-              callback(null, chargedeets);
             });
           });
         });
@@ -213,29 +213,34 @@ function mailchimpAddSub(email) {
 };
 
 // Send a receipt
-//function sendReceipt(data) {
-  // let htmlBody = [
-  //   '<div>',
-  //     '<p>Your' + data.metadata.giftcard_amount + 'gift card has been ordered.</p>',
-  //   '</div>',
-  // ].join('\n');
+
+let transporter = nodemailer.createTransport({
+    sendmail: true,
+    newline: 'unix',
+    path: '/usr/sbin/sendmail'
+});
+
+// setup email data with unicode symbols
+function sendReceipt(data) {
+  let html = [
+    '<div>',
+      '<p>Your ' + data.metadata.giftcard_amount + ' gift card from Canlis has been orded.</p>',
+    '</div>'
+  ].join('\n');
   let mailOptions = {
-      from: '"Canlis" <no-reply@canlis.com>',
-      to: 'jeremy@bsley.com',
-      subject: 'Your Canlis gift card has been ordered.',
-      text: '3232323',
-      html: '5678798765434'
+      from: '"Canlis" <no-reply@canlis.com>', // sender address
+      to: 'jeremy@bsley.com', // list of receivers
+      subject: 'Your Canlis gift card has been ordered!', // Subject line
+      text: 'Hello world ?', // plain text body
+      html: html // html body
   };
-  let transporter = nodemailer.createTransport({
-      sendmail: true,
-      newline: 'unix',
-      path: '/usr/sbin/sendmail'
-  });
-  transporter.sendMail(mailOptions, (err, info) => {
-    if (err) { return console.log(err); }
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+        return console.log(error);
+    }
     console.log('Message %s sent: %s', info.messageId, info.response);
   });
-//};
+};
 
 // Form submission
 app.post('/thanks', function (req, res) {
