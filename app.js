@@ -10,6 +10,7 @@ stripe.setApiVersion('2017-02-14');
 const bodyParser = require('body-parser')
 const _ = require("lodash");
 const getJSON = require('get-json');
+const request = require('request');
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
@@ -37,7 +38,9 @@ function buyGiftCard(form, callback) {
             if (err) {}
             createCharge(customer, orderTotal, (err, chargedeets) => {
               if (err) {}
-              callback(null, chargedeets);
+              mailchimpAddSub(order.email, (err, chargedeets) => {
+                callback(null, chargedeets);
+              });
             });
           });
         });
@@ -185,6 +188,29 @@ function createCharge(customer, orderTotal, callback) {
     }
     callback(null, charge)
   })
+}
+
+function mailchimpAddSub(email, callback) {
+  var subscriber = JSON.stringify({
+    "email_address": email,
+    "status": "subscribed"
+  });
+  request({
+    method: 'POST',
+    url: 'https://us15.api.mailchimp.com/3.0/lists/57057/members',
+    body: subscriber,
+    headers: {
+      Authorization: 'jeremypbeasley process.env.mailChimpApiKey',
+      'Content-Type': 'application/json'
+    }
+  }, function(err, result) {
+    if (err) {
+      console.log(err);
+    }
+    // var bodyObj = result;
+    console.log(result.body);
+    callback(null, result);
+  });
 }
 
 // Form submission
