@@ -215,22 +215,25 @@ function mailchimpAddSub(email) {
 // Send a receipt
 
 let transporter = nodemailer.createTransport({
-    sendmail: true,
-    newline: 'unix',
-    path: '/usr/sbin/sendmail'
+    service: 'gmail',
+    auth: {
+        user: process.env.googleAppsUsername,
+        pass: process.env.googleAppsPassword
+    }
 });
 
 // setup email data with unicode symbols
 function sendReceipt(data) {
   let html = [
     '<div>',
-      '<p>Your ' + data.metadata.giftcard_amount + ' gift card from Canlis has been orded.</p>',
+    '<p>Your ' + data.metadata.giftcard_amount + ' gift card from Canlis has been orded.</p>',
+    '<p>It will be shipped to the address you provided' + data.metadata.giftcard_amount + ' gift card from Canlis has been orded.</p>',
     '</div>'
   ].join('\n');
   let mailOptions = {
       from: '"Canlis" <no-reply@canlis.com>', // sender address
       to: 'jeremy@bsley.com', // list of receivers
-      subject: 'Your Canlis gift card has been ordered!', // Subject line
+      subject: 'Your Canlis gift card has been ordered! XXXX', // Subject line
       text: 'Hello world ?', // plain text body
       html: html // html body
   };
