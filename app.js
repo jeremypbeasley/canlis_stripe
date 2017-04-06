@@ -10,7 +10,8 @@ stripe.setApiVersion('2017-02-14');
 const bodyParser = require('body-parser')
 const _ = require("lodash");
 const getJSON = require('get-json');
-const request = require('request');
+// const request = require('request');
+const request = require('superagent');
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
@@ -38,9 +39,8 @@ function buyGiftCard(form, callback) {
             if (err) {}
             createCharge(customer, orderTotal, (err, chargedeets) => {
               if (err) {}
-              mailchimpAddSub(order.email, (err, chargedeets) => {
-                callback(null, chargedeets);
-              });
+              callback(null, chargedeets);
+              mailchimpAddSub(order.email);
             });
           });
         });
@@ -190,28 +190,23 @@ function createCharge(customer, orderTotal, callback) {
   })
 }
 
-function mailchimpAddSub(email, callback) {
-  var subscriber = JSON.stringify({
-    "email_address": email,
-    "status": "subscribed"
-  });
-  request({
-    method: 'POST',
-    url: 'https://us15.api.mailchimp.com/3.0/lists/57057/members',
-    body: subscriber,
-    headers: {
-      Authorization: 'jeremypbeasley process.env.mailChimpApiKey',
-      'Content-Type': 'application/json'
-    }
-  }, function(err, result) {
-    if (err) {
-      console.log(err);
-    }
-    // var bodyObj = result;
-    console.log(result.body);
-    callback(null, result);
-  });
-}
+function mailchimpAddSub(email) {
+  request
+    .post('https://' + process.env.mailchimpDataCenter + '.api.mailchimp.com/3.0/lists/' + process.env.mailchimpListId + '/members')
+    .set('Content-Type', 'application/json;charset=utf-8')
+    .set('Authorization', 'Basic ' + new Buffer('any:' + process.env.mailchimpApiKey ).toString('base64'))
+    .send({
+      'email_address': email,
+      'status': 'subscribed'
+    })
+    .end(function(err, response) {
+      if (response.status < 300 || (response.status === 400 && response.body.title === "Member Exists")) {
+        console.log('Signed Up!');
+      } else {
+        console.log('Sign Up Failed :(');
+      }
+    });
+};
 
 // Form submission
 app.post('/thanks', function (req, res) {
