@@ -13,7 +13,7 @@ $( document ).ready(function() {
   $('[name="shipping_address_state"]').val("Washington");
   $('[name="shipping_address_country"]').val("United States");
   $('[name="shipping_address_postal_code"]').val("98112");
-  $('[name="stripeEmail"]').val("johnny@hotmail.com");
+  $('[name="stripeEmail"]').val("jeremy@bsley.com");
   $('#cc').val("4242424242424242");
   $('#ccm').val("12");
   $('#ccy').val("19");

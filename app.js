@@ -13,6 +13,7 @@ const getJSON = require('get-json');
 // const request = require('request');
 const request = require('superagent');
 const nodemailer = require('nodemailer');
+const moment = require('moment');
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
@@ -222,26 +223,40 @@ let transporter = nodemailer.createTransport({
     }
 });
 
-// setup email data with unicode symbols
+// Setup email data
 function sendReceipt(data) {
+  // Shortens full name to first name
+  function getFirstName(str) {
+    if (str.indexOf(' ') === -1) {
+      return str;
+    } else {
+      return str.substr(0, str.indexOf(' '));
+    }
+  };
+  var firstName = getFirstName(data.metadata.customer_name );
+  var date = new Date("January 25, 2015");
+  var charge_amount = (data.items[0].amount/100 / 100).toFixed(2);
+  var charge_shipping = (data.items[2].amount/100 / 100).toFixed(2);
+  var charge_total = charge_shipping + charge_amount;
+  var date = moment(Date.now()).format('MMMM Do YYYY, h:mm:ss a');
+  var address_link = ( function() {
+    if (data.shipping.address.line2 !== null) {
+      return 'https://www.google.com/maps/place/' + data.shipping.address.line1 + '+' + data.shipping.address.line2 + '+' + data.shipping.address.city + '+' + data.shipping.address.state + '+' + data.shipping.address.postal_code;
+    } else {
+      return 'https://www.google.com/maps/place/' + data.shipping.address.line1 + '+' + data.shipping.address.city + '+' + data.shipping.address.state + '+' + data.shipping.address.postal_code;
+    }
+  }) ();
   let html = [
-    // '<div>',
-    // '<p>Your ' + data.metadata.giftcard_amount + ' gift card from Canlis has been orded.</p>',
-    // '<p>It will be shipped to the address you provided' + data.metadata.giftcard_amount + ' gift card from Canlis has been orded.</p>',
-    // '</div>'
     '<head>',
       '<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">',
     '</head>',
+    '<style> .im {color: #000000 !important;} </style>',
     '<div class="EmailContainer" style="font-family: &quot;Courier New&quot;, Courier, monospace;font-size: 13px;color: black;background: white;line-height: 150%;max-width: 400px;margin: 30px 0px 60px 0px;">',
       '<hr style="width: 100%;height: 1px;border: none;border-bottom: 1px dashed black;background: transparent;margin: 32px 0px;">',
       '<img class="Logo" src="https://cdn2.dropmarkusercontent.com/39456/a4c04c2d4c01cd3377567b5feba635eda5b2917a/canlislogo.jpg" style="width: 100px;margin: 60px 0px;">',
-      '<p>Hello,'
-        var.name,
-      '.</p>',
+      '<p>Hello,', firstName, '.</p>',
       '<p>Thanks for purchasing a gift card with us. We&#39;ll be shipping it in 1-2 business days.</p>',
-      '<p>Confirmation No. #',
-        var.id,
-      '</p>',
+      '<p>Confirmation No. #', data.id, '</p>',
       '<hr style="width: 100%;height: 1px;border: none;border-bottom: 1px dashed black;background: transparent;margin: 32px 0px;">',
       '<table style="width: 100%;margin: 0px;padding: 0px;border-spacing: 0px;font-family: &quot;Courier New&quot;, Courier, monospace;font-size: 13px;color: black;">',
         '<tbody>',
@@ -252,8 +267,8 @@ function sendReceipt(data) {
               '</span>',
             '</td>',
             '<td class="Currency" style="margin: 0px;padding: 0px;border: none;font-family: &quot;Courier New&quot;, Courier, monospace;font-size: 13px;text-align: right;">',
-              '<span style="display: block;padding: .5em 0px;">',
-                var.giftcardamount,
+              '<span style="display: block;padding: .5em 0px;">$',
+                charge_amount,
               '</span>',
             '</td>',
           '</tr>',
@@ -264,8 +279,8 @@ function sendReceipt(data) {
               '</span>',
             '</td>',
             '<td class="Currency" style="margin: 0px;padding: 0px;border: none;font-family: &quot;Courier New&quot;, Courier, monospace;font-size: 13px;text-align: right;">',
-              '<span style="display: block;padding: .5em 0px;">',
-                var.shippingcost,
+              '<span style="display: block;padding: .5em 0px;">$',
+                charge_shipping,
               '</span>',
             '</td>',
           '</tr>',
@@ -276,8 +291,8 @@ function sendReceipt(data) {
               '</span>',
             '</td>',
             '<td class="Currency" style="margin: 0px;padding: 0px;border: none;font-family: &quot;Courier New&quot;, Courier, monospace;font-size: 13px;text-align: right;">',
-              '<span style="display: block;padding: .5em 0px;">',
-                var.total,
+              '<span style="display: block;padding: .5em 0px;">$',
+                charge_total,
               '</span>',
             '</td>',
           '</tr>',
@@ -294,7 +309,7 @@ function sendReceipt(data) {
             '</td>',
             '<td class="Currency" style="margin: 0px;padding: 0px;border: none;font-family: &quot;Courier New&quot;, Courier, monospace;font-size: 13px;text-align: right;">',
               '<span style="display: block;padding: .5em 0px;">',
-                var.name,
+                data.metadata.customer_name,
               '</span>',
             '</td>',
           '</tr>',
@@ -306,8 +321,8 @@ function sendReceipt(data) {
             '</td>',
             '<td class="Currency" style="margin: 0px;padding: 0px;border: none;font-family: &quot;Courier New&quot;, Courier, monospace;font-size: 13px;text-align: right;">',
               '<span style="display: block;padding: .5em 0px;">',
-                '<a href="mailto:kelly.mercer@gmail.com" style="color: black;text-decoration: none;">',
-                  var.email,
+                '<a href="mailto:', data.email, '" style="color: black;text-decoration: none;">',
+                  data.email,
                 '</a>',
               '</span>',
             '</td>',
@@ -321,7 +336,7 @@ function sendReceipt(data) {
             '<td class="Currency" style="margin: 0px;padding: 0px;border: none;font-family: &quot;Courier New&quot;, Courier, monospace;font-size: 13px;text-align: right;">',
               '<span style="display: block;padding: .5em 0px;">',
                 '<a href="" style="color: black;text-decoration: none;">',
-                  var.date,
+                  date,
                 '</a>',
               '</span>',
             '</td>',
@@ -329,22 +344,24 @@ function sendReceipt(data) {
         '</tbody>',
       '</table>',
       '<p>',
-        'Shipping Address:<br>',
-        '<a href=" style="color: black;text-decoration: none;">',
-          var.shippingline1, '<br>',
-          var.city, '&#44; ', var.state, '<br>',
-          var.zip, '</a>',
+        'Shipping To:<br>',
+        '<a href="', address_link, '" style="color: black;text-decoration: none;">',
+          data.shipping.name, '<br>',
+          data.shipping.address.line1, "&nbsp;",
+          data.shipping.address.line2, '<br>',
+          data.shipping.address.city, '&#44; ', data.shipping.address.state, '<br>',
+          data.shipping.address.postal_code, '</a>',
       '</p>',
       '<hr style="width: 100%;height: 1px;border: none;border-bottom: 1px dashed black;background: transparent;margin: 32px 0px;">',
-      '<p>If you have any questions about your card, please call us at <a href="tel:2062833313" style="color: black;text-decoration: none;">(206) 283-3313</a></p>',
+      '<p>If you have any questions about your card, please call us at <a href="tel:2062833313" style="color: black;text-decoration: none;">(206) 283-3313</a>.</p>',
     '</div>',
   ].join('\n');
   let mailOptions = {
-      from: '"Canlis" <no-reply@canlis.com>', // sender address
-      to: data.email, // list of receivers
-      subject: 'Your gift card receipt from Canlis.', // Subject line
-      text: 'Hello world ?', // plain text body
-      html: html // html body
+      from: '"Canlis" <no-reply@canlis.com>',
+      to: data.email,
+      subject: '✉️ Your gift card receipt from Canlis.',
+      text: 'Hello world ?',
+      html: html
   };
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
