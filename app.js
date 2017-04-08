@@ -118,17 +118,6 @@ function createOrder(form, chosenSku, callback) {
   } else {
     recipient_message = form.recipient_message;
   }
-  // var shipping_pref = ( function() {
-  //   if (form.shipping_preference == "pickup") {
-  //     return "Do not ship. Picking up at Canlis office."
-  //   }
-  //   if (form.shipping_preference == "customer") {
-  //     return "Ship to customer."
-  //   }
-  //   if (form.shipping_preference == "recipient") {
-  //     return "Ship to recipient."
-  //   }
-  // }) ();
   stripe.orders.create({
     items: [{
       type: 'sku',
