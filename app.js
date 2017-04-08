@@ -241,7 +241,13 @@ function sendReceipt(order, charge) {
   var firstName = getFirstName(order.metadata.customer_name) + ".";
   var date = new Date("January 25, 2015");
   var charge_amount = (order.items[0].amount / 100).toFixed(2);
-  var charge_shipping = (order.items[2].amount / 100).toFixed(2);
+  var charge_shipping = ( function() {
+    if (order.metadata.shipping_preference !== "pickup") {
+      return '4.00';
+    } else {
+      return '0.00';
+    }
+  }) ();
   var charge_total = (charge.amount / 100).toFixed(2);
   var date = moment(Date.now()).format('MMMM Do YYYY, h:mm:ss a');
   var address_link = ( function() {
