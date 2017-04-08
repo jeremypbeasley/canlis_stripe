@@ -42,9 +42,8 @@ function buyGiftCard(form, callback) {
             createCharge(customer, orderTotal, (err, chargedeets) => {
               if (err) {}
               callback(null, chargedeets);
-              mailchimpAddSub(order.email);
+              mailchimpAddSub(order);
               sendReceipt(order, chargedeets);
-              console.log(order);
             });
           });
         });
@@ -208,20 +207,24 @@ function createCharge(customer, orderTotal, callback) {
 
 // Add to Mailchimp
 
-function mailchimpAddSub(email) {
+function mailchimpAddSub(order) {
   request
     .post('https://' + process.env.mailchimpDataCenter + '.api.mailchimp.com/3.0/lists/' + process.env.mailchimpListId + '/members')
     .set('Content-Type', 'application/json;charset=utf-8')
     .set('Authorization', 'Basic ' + new Buffer('any:' + process.env.mailchimpApiKey ).toString('base64'))
     .send({
-      'email_address': email,
-      'status': 'subscribed'
+      'email_address': order.email,
+      'status': 'subscribed',
+      "merge_fields": {
+        "FNAME": order.metadata.customer_name,
+        "LNAME": "",
+      }
     })
     .end(function(err, response) {
       if (response.status < 300 || (response.status === 400 && response.body.title === "Member Exists")) {
-        console.log('Signed Up!');
+        console.log('Mailchimp: Subscription sucessful.');
       } else {
-        console.log('Sign Up Failed :(');
+        console.log('Mailchimp: Subscription failed.');
       }
     });
 };
@@ -403,7 +406,7 @@ function sendReceipt(order, charge) {
     if (error) {
         return console.log(error);
     }
-    console.log('Message %s sent: %s', info.messageId, info.response);
+    console.log('Email receipt %s sent: %s', info.messageId, info.response);
   });
 };
 
