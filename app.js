@@ -394,7 +394,7 @@ function sendReceipt(order, charge) {
       from: '"Canlis" <no-reply@canlis.com>',
       to: order.email,
       subject: '✉️ Your gift card receipt from Canlis.',
-      text: 'Hello world ?',
+      text: '',
       html: html
   };
   transporter.sendMail(mailOptions, (error, info) => {
