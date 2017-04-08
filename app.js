@@ -43,7 +43,8 @@ function buyGiftCard(form, callback) {
               if (err) {}
               callback(null, chargedeets);
               mailchimpAddSub(order.email);
-              sendReceipt(order);
+              sendReceipt(order, chargedeets);
+              console.log(order);
             });
           });
         });
@@ -112,12 +113,23 @@ function createCustomer(form, callback) {
 }
 
 function createOrder(form, chosenSku, callback) {
-var recipient_message;
+  var recipient_message;
   if (!form.recipient_message) {
     recipient_message = "No message provided.";
   } else {
     recipient_message = form.recipient_message;
   }
+  // var shipping_pref = ( function() {
+  //   if (form.shipping_preference == "pickup") {
+  //     return "Do not ship. Picking up at Canlis office."
+  //   }
+  //   if (form.shipping_preference == "customer") {
+  //     return "Ship to customer."
+  //   }
+  //   if (form.shipping_preference == "recipient") {
+  //     return "Ship to recipient."
+  //   }
+  // }) ();
   stripe.orders.create({
     items: [{
       type: 'sku',
@@ -136,6 +148,7 @@ var recipient_message;
     },
     // we throw in some information as meta data so it can easily be seen from the Stripe dashboard at https://dashboard.stripe.com/orders without clicking on the customer
     metadata: {
+      shipping_preference: form.shipping_preference,
       giftcard_amount: '$' + form.stripeAmount,
       customer_name: form.customer_name,
       customer_email: form.stripeEmail,
@@ -224,7 +237,7 @@ let transporter = nodemailer.createTransport({
 });
 
 // Setup email data
-function sendReceipt(data) {
+function sendReceipt(order, charge) {
   // Shortens full name to first name
   function getFirstName(str) {
     if (str.indexOf(' ') === -1) {
@@ -233,17 +246,45 @@ function sendReceipt(data) {
       return str.substr(0, str.indexOf(' '));
     }
   };
-  var firstName = getFirstName(data.metadata.customer_name );
+  var firstName = getFirstName(order.metadata.customer_name) + ".";
   var date = new Date("January 25, 2015");
-  var charge_amount = (data.items[0].amount/100 / 100).toFixed(2);
-  var charge_shipping = (data.items[2].amount/100 / 100).toFixed(2);
-  var charge_total = charge_shipping + charge_amount;
+  var charge_amount = (order.items[0].amount / 100).toFixed(2);
+  var charge_shipping = (order.items[2].amount / 100).toFixed(2);
+  var charge_total = (charge.amount / 100).toFixed(2);
   var date = moment(Date.now()).format('MMMM Do YYYY, h:mm:ss a');
   var address_link = ( function() {
-    if (data.shipping.address.line2 !== null) {
-      return 'https://www.google.com/maps/place/' + data.shipping.address.line1 + '+' + data.shipping.address.line2 + '+' + data.shipping.address.city + '+' + data.shipping.address.state + '+' + data.shipping.address.postal_code;
+    if (order.shipping.address.line2 !== null) {
+      return 'https://www.google.com/maps/place/' + order.shipping.address.line1 + '+' + order.shipping.address.line2 + '+' + order.shipping.address.city + '+' + order.shipping.address.state + '+' + order.shipping.address.postal_code;
     } else {
-      return 'https://www.google.com/maps/place/' + data.shipping.address.line1 + '+' + data.shipping.address.city + '+' + data.shipping.address.state + '+' + data.shipping.address.postal_code;
+      return 'https://www.google.com/maps/place/' + order.shipping.address.line1 + '+' + order.shipping.address.city + '+' + order.shipping.address.state + '+' + order.shipping.address.postal_code;
+    }
+  }) ();
+  var shipping_greeting = ( function() {
+    if (order.metadata.shipping_preference == "pickup") {
+      return 'We&#39;ll have it ready for you in 1-2 business days. <br><br>Feel free to call us at <a href="tel:2062833313" style="color: black;text-decoration: none;">(206) 283-3313</a> to confirm it&apos;s ready before you visit our office. <br><br> Need directions to our office? Click <a href="https://www.google.com/maps/place/Canlis/@47.6430933,-122.3467535,15z" target="_blank">here</a>.';
+    }
+    if (order.metadata.shipping_preference == "customer") {
+      return 'We&#39;ll be shipping it to you in 1-2 business days.';
+    }
+    if (order.metadata.shipping_preference == "recipient") {
+      return 'We&#39;ll be shipping it to ' + getFirstName(order.metadata.recipient_name) + ' in 1-2 business days.';
+    }
+  }) ();
+  let shippingContent = [
+    '<p>',
+      'Shipping To:<br>',
+      '<a href="', address_link, '" style="color: black;text-decoration: none;">',
+        order.shipping.address.line1, "&nbsp;",
+        order.shipping.address.line2, '<br>',
+        order.shipping.address.city, '&#44; ', order.shipping.address.state, '<br>',
+        order.shipping.address.postal_code, '</a>',
+    '</p>',
+  ].join('\n');
+  var shipping_section = ( function() {
+    if (order.metadata.shipping_preference !== "pickup") {
+      return shippingContent;
+    } else {
+      return;
     }
   }) ();
   let html = [
@@ -254,16 +295,18 @@ function sendReceipt(data) {
     '<div class="EmailContainer" style="font-family: &quot;Courier New&quot;, Courier, monospace;font-size: 13px;color: black;background: white;line-height: 150%;max-width: 400px;margin: 30px 0px 60px 0px;">',
       '<hr style="width: 100%;height: 1px;border: none;border-bottom: 1px dashed black;background: transparent;margin: 32px 0px;">',
       '<img class="Logo" src="https://cdn2.dropmarkusercontent.com/39456/a4c04c2d4c01cd3377567b5feba635eda5b2917a/canlislogo.jpg" style="width: 100px;margin: 60px 0px;">',
-      '<p>Hello,', firstName, '.</p>',
-      '<p>Thanks for purchasing a gift card with us. We&#39;ll be shipping it in 1-2 business days.</p>',
-      '<p>Confirmation No. #', data.id, '</p>',
+      '<p>Hello,', firstName, '</p>',
+      '<p>Thanks for purchasing a gift card with us. ',
+        shipping_greeting,
+      '</p>',
+      '<p>Order No. #', order.id, '</p>',
       '<hr style="width: 100%;height: 1px;border: none;border-bottom: 1px dashed black;background: transparent;margin: 32px 0px;">',
       '<table style="width: 100%;margin: 0px;padding: 0px;border-spacing: 0px;font-family: &quot;Courier New&quot;, Courier, monospace;font-size: 13px;color: black;">',
         '<tbody>',
           '<tr style="margin: 0px;padding: 0px;border: none;font-family: &quot;Courier New&quot;, Courier, monospace;font-size: 13px;">',
             '<td style="margin: 0px;padding: 0px;border: none;font-family: &quot;Courier New&quot;, Courier, monospace;font-size: 13px;">',
               '<span style="display: block;padding: .5em 0px;">',
-                'Gift Card Amount',
+                'Gift Card Amount:',
               '</span>',
             '</td>',
             '<td class="Currency" style="margin: 0px;padding: 0px;border: none;font-family: &quot;Courier New&quot;, Courier, monospace;font-size: 13px;text-align: right;">',
@@ -298,6 +341,7 @@ function sendReceipt(data) {
           '</tr>',
         '</tbody>',
       '</table>',
+      '<p>Paid via ', charge.source.brand, ' ending in ', charge.source.last4,'</p>',
       '<hr style="width: 100%;height: 1px;border: none;border-bottom: 1px dashed black;background: transparent;margin: 32px 0px;">',
       '<table style="width: 100%;margin: 0px;padding: 0px;border-spacing: 0px;font-family: &quot;Courier New&quot;, Courier, monospace;font-size: 13px;color: black;">',
         '<tbody>',
@@ -309,7 +353,7 @@ function sendReceipt(data) {
             '</td>',
             '<td class="Currency" style="margin: 0px;padding: 0px;border: none;font-family: &quot;Courier New&quot;, Courier, monospace;font-size: 13px;text-align: right;">',
               '<span style="display: block;padding: .5em 0px;">',
-                data.metadata.customer_name,
+                order.metadata.customer_name,
               '</span>',
             '</td>',
           '</tr>',
@@ -321,8 +365,8 @@ function sendReceipt(data) {
             '</td>',
             '<td class="Currency" style="margin: 0px;padding: 0px;border: none;font-family: &quot;Courier New&quot;, Courier, monospace;font-size: 13px;text-align: right;">',
               '<span style="display: block;padding: .5em 0px;">',
-                '<a href="mailto:', data.email, '" style="color: black;text-decoration: none;">',
-                  data.email,
+                '<a href="mailto:', order.email, '" style="color: black;text-decoration: none;">',
+                  order.email,
                 '</a>',
               '</span>',
             '</td>',
@@ -343,22 +387,14 @@ function sendReceipt(data) {
           '</tr>',
         '</tbody>',
       '</table>',
-      '<p>',
-        'Shipping To:<br>',
-        '<a href="', address_link, '" style="color: black;text-decoration: none;">',
-          data.shipping.name, '<br>',
-          data.shipping.address.line1, "&nbsp;",
-          data.shipping.address.line2, '<br>',
-          data.shipping.address.city, '&#44; ', data.shipping.address.state, '<br>',
-          data.shipping.address.postal_code, '</a>',
-      '</p>',
+      shipping_section,
       '<hr style="width: 100%;height: 1px;border: none;border-bottom: 1px dashed black;background: transparent;margin: 32px 0px;">',
       '<p>If you have any questions about your card, please call us at <a href="tel:2062833313" style="color: black;text-decoration: none;">(206) 283-3313</a>.</p>',
     '</div>',
   ].join('\n');
   let mailOptions = {
       from: '"Canlis" <no-reply@canlis.com>',
-      to: data.email,
+      to: order.email,
       subject: '✉️ Your gift card receipt from Canlis.',
       text: 'Hello world ?',
       html: html
