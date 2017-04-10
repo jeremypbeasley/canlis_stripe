@@ -174,8 +174,12 @@ function applyShipping(form, order, callback) {
   // update the order object with the prefered shipping method
   stripe.orders.update(order.id, {
     selected_shipping_method: shippingId
+  }, function(err, order) {
+    if (err) {
+      console.log(err)
+    }
+    callback(null, orderTotal)
   });
-  callback(null, orderTotal);
 }
 
 function payOrder(order, form, callback) {
