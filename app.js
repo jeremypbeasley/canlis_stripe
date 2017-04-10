@@ -338,6 +338,7 @@ function sendReceipt(order, charge) {
           '</tr>',
         '</tbody>',
       '</table>',
+      // unable to display this without separate query given that order.pay does not return CC info
       // '<p>Paid via ', charge.source.brand, ' ending in ', charge.source.last4,'</p>',
       '<hr style="width: 100%;height: 1px;border: none;border-bottom: 1px dashed black;background: transparent;margin: 32px 0px;">',
       '<table style="width: 100%;margin: 0px;padding: 0px;border-spacing: 0px;font-family: &quot;Courier New&quot;, Courier, monospace;font-size: 13px;color: black;">',
