@@ -37,11 +37,11 @@ function buyGiftCard(form, callback) {
         if (err) {}
         applyShipping(form, order, (err, orderTotal) => {
           if (err) {}
-          payOrder(order, form, orderTotal, (err, chargedeets) => {
+          payOrder(order, form, (err, order) => {
             if (err) {}
-            callback(null, chargedeets);
+            callback(null, order);
             mailchimpAddSub(order);
-            sendReceipt(order, chargedeets);
+            sendReceipt(order, order);
           });
         });
       });
@@ -175,38 +175,18 @@ function applyShipping(form, order, callback) {
   stripe.orders.update(order.id, {
     selected_shipping_method: shippingId
   });
-  callback(null, orderTotal)
+  callback(null, orderTotal);
 }
 
-function payOrder(order, form, orderTotal, callback) {
-  // stripe.charges.create({
-  //   amount: orderTotal,
-  //   currency: "usd",
-  //   customer: customer.id
-  // }, function(err, charge) {
-  //   if (err) {
-  //     console.log(err)
-  //   }
-  //   callback(null, charge)
-  // })
+function payOrder(order, form, callback) {
   stripe.orders.pay(order.id, {
     source: form.stripeToken
-  }, function(err, charge) {
+  }, function(err, order) {
     if (err) {
       console.log(err)
     }
-    callback(null, charge)
+    callback(null, order)
   });
-  // stripe.charges.create({
-  //   amount: orderTotal,
-  //   currency: "usd",
-  //   customer: customer.id
-  // }, function(err, charge) {
-  //   if (err) {
-  //     console.log(err)
-  //   }
-  //   callback(null, charge)
-  // })
 }
 
 // Add to Mailchimp
