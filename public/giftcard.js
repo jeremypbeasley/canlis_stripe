@@ -94,6 +94,7 @@ $( document ).ready(function() {
       $(this).removeClass("Default");
     });
   });
+
 });
 
 // ERASE ADDRESS AUTOCOMPLETE IF "PICK UP AT CANLIS" IS SELECTED
@@ -110,7 +111,7 @@ $('#ShipToPickup').click(function() {
 
 // FORM VALIDATION & ERROR MESSAGES
 
-Stripe.setPublishableKey('pk_test_Gbu2akKhNgGjbKi4LPxOOWqc');
+Stripe.setPublishableKey('pk_live_4kvjDESffDHa3yDxThoVTXUK');
 
 $("#payment-form").submit(function(event) {
   $("#payment-form").validate({

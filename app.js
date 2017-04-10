@@ -33,18 +33,15 @@ function buyGiftCard(form, callback) {
     if (err) {}
     chooseSku(form, skuList, (err, chosenSku) => {
       if (err) {}
-      createCustomer(form, (err, customer) => {
+      createOrder(form, chosenSku, (err, order) => {
         if (err) {}
-        createOrder(form, chosenSku, (err, order) => {
+        applyShipping(form, order, (err, orderTotal) => {
           if (err) {}
-          applyShipping(form, order, (err, orderTotal) => {
+          payOrder(order, form, (err, order) => {
             if (err) {}
-            createCharge(customer, orderTotal, (err, chargedeets) => {
-              if (err) {}
-              callback(null, chargedeets);
-              mailchimpAddSub(order);
-              sendReceipt(order, chargedeets);
-            });
+            callback(null, order);
+            mailchimpAddSub(order);
+            sendReceipt(order, order);
           });
         });
       });
@@ -177,21 +174,23 @@ function applyShipping(form, order, callback) {
   // update the order object with the prefered shipping method
   stripe.orders.update(order.id, {
     selected_shipping_method: shippingId
-  });
-  callback(null, orderTotal)
-}
-
-function createCharge(customer, orderTotal, callback) {
-  stripe.charges.create({
-    amount: orderTotal,
-    currency: "usd",
-    customer: customer.id
-  }, function(err, charge) {
+  }, function(err, order) {
     if (err) {
       console.log(err)
     }
-    callback(null, charge)
-  })
+    callback(null, orderTotal)
+  });
+}
+
+function payOrder(order, form, callback) {
+  stripe.orders.pay(order.id, {
+    source: form.stripeToken
+  }, function(err, order) {
+    if (err) {
+      console.log(err)
+    }
+    callback(null, order)
+  });
 }
 
 // Add to Mailchimp
@@ -339,7 +338,8 @@ function sendReceipt(order, charge) {
           '</tr>',
         '</tbody>',
       '</table>',
-      '<p>Paid via ', charge.source.brand, ' ending in ', charge.source.last4,'</p>',
+      // unable to display this without separate query given that order.pay does not return CC info
+      // '<p>Paid via ', charge.source.brand, ' ending in ', charge.source.last4,'</p>',
       '<hr style="width: 100%;height: 1px;border: none;border-bottom: 1px dashed black;background: transparent;margin: 32px 0px;">',
       '<table style="width: 100%;margin: 0px;padding: 0px;border-spacing: 0px;font-family: &quot;Courier New&quot;, Courier, monospace;font-size: 13px;color: black;">',
         '<tbody>',
