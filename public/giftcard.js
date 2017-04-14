@@ -1,11 +1,10 @@
 $( document ).ready(function() {
 
   // TESTING ONLY: FORM AUTO FILL
-  // 
+
   // $('[name="customer_name"]').val("John Smith");
   // $('[name="customer_phone"]').val("2064567890");
   // $('[name="recipient_name"]').val("Jane Doe");
-  // $('[name="from_name"]').val("Hubby");
   // $('[name="recipient_message"]').val("Just for being great and all.");
   // $('#ShipToPickup').prop("checked", true);
   // $('[name="shipping_address_line1"]').val("171 Lake Washington Blvd E");
