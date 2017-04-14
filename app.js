@@ -139,6 +139,7 @@ function createOrder(form, chosenSku, callback) {
       card_id: "Not assigned yet",
       shipping_preference: form.shipping_preference,
       customer_name: form.customer_name,
+      customer_phone: form.customer_phone,
       from: fromname,
       to: form.recipient_name,
       recipient_message: recipient_message
