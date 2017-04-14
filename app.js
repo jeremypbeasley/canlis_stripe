@@ -10,7 +10,6 @@ stripe.setApiVersion('2017-02-14');
 const bodyParser = require('body-parser')
 const _ = require("lodash");
 const getJSON = require('get-json');
-// const request = require('request');
 const request = require('superagent');
 const nodemailer = require('nodemailer');
 const moment = require('moment');
@@ -115,6 +114,10 @@ function createOrder(form, chosenSku, callback) {
   } else {
     recipient_message = form.recipient_message;
   }
+  var fromname = "None provided";
+  if (form.from_name) {
+    fromname = form.from_name;
+  }
   stripe.orders.create({
     items: [{
       type: 'sku',
@@ -133,10 +136,10 @@ function createOrder(form, chosenSku, callback) {
     },
     // we throw in some information as meta data so it can easily be seen from the Stripe dashboard at https://dashboard.stripe.com/orders without clicking on the customer
     metadata: {
-      card_id: "Not assigned",
+      card_id: "Not assigned yet",
       shipping_preference: form.shipping_preference,
       customer_name: form.customer_name,
-      from: form.from_name,
+      from: fromname,
       to: form.recipient_name,
       recipient_message: recipient_message
     }
