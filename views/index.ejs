@@ -71,24 +71,18 @@
           <span class="Caption">Amount</span>
           <div class="GiftAmount">
             <input class="InputGiftAmount" type="tel" name="stripeAmount">
-            <input type="hidden" name="productId" value="prod_ANmFaXoOSZtYxi">
+            <input type="hidden" name="productId" value="prod_A06J6m2sZjfgXq">
           </div>
         </label>
       </div>
       <div class="FormItem">
-        <label class="Caption">Your Name</label>
-        <input class="InputText" type="text" data-stripe="name" name="customer_name" autocomplete="name">
+        <label class="Caption">From:</label>
+        <input class="InputText" type="text" name="from_name" autocomplete="off" readonly onfocus="if (this.hasAttribute('readonly')) {this.removeAttribute('readonly');
+        // fix for mobile safari to show virtual keyboard
+        this.blur(); this.focus();  }" />
       </div>
       <div class="FormItem">
-        <label class="Caption">Your Email</label>
-        <input class="InputText" type="email" name="stripeEmail" autocomplete="email">
-      </div>
-      <div class="FormItem">
-        <label class="Caption">Your Phone Number</label>
-        <input class="InputText" type="tel" name="customer_phone" autocomplete="tel">
-      </div>
-      <div class="FormItem">
-        <label class="Caption">Recipient's Name</label>
+        <label class="Caption">To:</label>
         <input class="InputText" type="text" name="recipient_name" autocomplete="off" readonly onfocus="if (this.hasAttribute('readonly')) {this.removeAttribute('readonly');
         // fix for mobile safari to show virtual keyboard
         this.blur(); this.focus();  }" />
@@ -197,6 +191,10 @@
       </div>
       <p class="Display2 mt5 ">Payment</p>
       <div class="FormItem">
+        <label class="Caption">Name on card</label>
+        <input class="InputText" type="text" data-stripe="name" name="customer_name" autocomplete="name">
+      </div>
+      <div class="FormItem">
         <label class="Caption">Card Number</label>
         <input class="InputText" type="tel" data-stripe="number" id="cc" maxlength="16" autocomplete="cc-number">
       </div>
@@ -212,9 +210,18 @@
         <label class="Caption">Security Code</label>
         <input class="InputText" type="tel" size="4" data-stripe="cvc" id="cvv" maxlength="4" autocomplete="cc-csc">
       </div>
+      <p class="Display2 mt5 ">Contact</p>
+      <div class="FormItem">
+        <label class="Caption">Your Email</label>
+        <input class="InputText" type="email" name="stripeEmail" autocomplete="email">
+      </div>
+      <div class="FormItem">
+        <label class="Caption">Your Phone Number</label>
+        <input class="InputText" type="tel" name="customer_phone" autocomplete="tel">
+      </div>
       <p id="YouWillBeCharged" class="mt4"></p>
       <!-- <input type="submit" class="submit " value="Purchase"> -->
-      <button class="SubmitButton mt5">
+      <button class="SubmitButton mt8">
         <div class="CompleteCheck"></div>
         <div class="LoadingSpinnerCont">
           <div class="LoadingSpinner"></div>

@@ -133,12 +133,11 @@ function createOrder(form, chosenSku, callback) {
     },
     // we throw in some information as meta data so it can easily be seen from the Stripe dashboard at https://dashboard.stripe.com/orders without clicking on the customer
     metadata: {
+      card_id: "Not assigned",
       shipping_preference: form.shipping_preference,
-      giftcard_amount: '$' + form.stripeAmount,
       customer_name: form.customer_name,
-      customer_email: form.stripeEmail,
-      customer_phone: form.customer_phone,
-      recipient_name: form.recipient_name,
+      from: form.from_name,
+      to: form.recipient_name,
       recipient_message: recipient_message
     }
   }, function(err, order) {
