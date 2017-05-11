@@ -108,15 +108,26 @@ function createCustomer(form, callback) {
 }
 
 function createOrder(form, chosenSku, callback) {
+  // fallback for optional message
   var recipient_message;
   if (!form.recipient_message) {
     recipient_message = "No message provided.";
   } else {
     recipient_message = form.recipient_message;
   }
-  var fromname = "None provided";
-  if (form.from_name) {
+  // fallback for optional from name
+  var fromname;
+  if (!form.from_name) {
+    fromname = "None provided"
+  } else {
     fromname = form.from_name;
+  }
+  // fallback for optional second address line
+  var addressline2;
+  if (!form.shipping_address_line2) {
+    addressline2 = "";
+  } else {
+    addressline2 = form.shipping_address_line2;
   }
   stripe.orders.create({
     items: [{
@@ -129,6 +140,7 @@ function createOrder(form, chosenSku, callback) {
       name: form.recipient_name,
       address: {
         line1: form.shipping_address_line1,
+        line2: addressline2,
         city: form.shipping_address_city,
         state: form.shipping_address_state,
         postal_code: form.shipping_address_postal_code
