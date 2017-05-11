@@ -59,7 +59,6 @@ function getSkuList(callback) {
 }
 
 function chooseSku(form, skuList, callback) {
-  console.log(form);
   // make a list of price-points that already exist for the gift card
   var sortedskus = _.map(skuList.data, "price")
   // see if the price we're trying to submit already exists
