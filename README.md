@@ -17,4 +17,4 @@ keySecret=sk_test_XXXXX
 
 Don't forget to change back #2 and #3 to the live keys when you deploy, otherwise you'll break the app in production.
 
-Note: In production, this `.env` file is replaced by Heroku's (https://devcenter.heroku.com/articles/config-vars)["Config Vars"] so there's no need to deploy it. It's currently ignored in the `.gitignore` to ensure this.
+Note: In production, this `.env` file is replaced by Heroku's ["Config Vars"](https://devcenter.heroku.com/articles/config-vars) so there's no need to deploy it. It's currently ignored in the `.gitignore` to ensure this.
