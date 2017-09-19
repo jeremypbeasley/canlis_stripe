@@ -3,6 +3,7 @@ $( document ).ready(function() {
   // TESTING ONLY: FORM AUTO FILL
 
   // $('[name="customer_name"]').val("John Smith");
+  // $('[name="from_name"]').val("John Smith");
   // $('[name="customer_phone"]').val("2064567890");
   // $('[name="recipient_name"]').val("Jane Doe");
   // $('[name="recipient_message"]').val("Just for being great and all.");
