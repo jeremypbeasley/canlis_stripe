@@ -3,6 +3,7 @@
 require('dotenv').config()
 const keyPublishable = process.env.keyPublishable;
 const keySecret = process.env.keySecret;
+const productId = process.env.productId;
 const express = require('express')
 const app = express()
 const stripe = require("stripe")(keySecret);
@@ -72,7 +73,7 @@ function chooseSku(form, skuList, callback) {
   } else {
     // make a new sku
     stripe.skus.create({
-      product: form.productId,
+      product: productId,
       attributes: {
         'loadedamount': form.stripeAmount
       },
