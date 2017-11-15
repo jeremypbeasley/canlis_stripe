@@ -245,15 +245,6 @@ let transporter = nodemailer.createTransport({
 
 // Setup email data
 function sendReceipt(order, charge) {
-  // Shortens full name to first name
-  // function getFirstName(str) {
-  //   if (str.indexOf(' ') === -1) {
-  //     return str;
-  //   } else {
-  //     return str.substr(0, str.indexOf(' '));
-  //   }
-  // };
-  // var firstName = getFirstName(order.metadata.customer_name) + ".";
   var date = new Date("January 25, 2015");
   var charge_amount = (order.items[0].amount / 100).toFixed(2);
   var charge_shipping = ( function() {
@@ -308,7 +299,6 @@ function sendReceipt(order, charge) {
     '<div class="EmailContainer" style="font-family: &quot;Courier New&quot;, Courier, monospace;font-size: 13px;color: black;background: white;line-height: 150%;max-width: 400px;margin: 30px 0px 60px 0px;">',
       '<hr style="width: 100%;height: 1px;border: none;border-bottom: 1px dashed black;background: transparent;margin: 32px 0px;">',
       '<img class="Logo" src="https://cdn2.dropmarkusercontent.com/39456/a4c04c2d4c01cd3377567b5feba635eda5b2917a/canlislogo.jpg" style="width: 100px;margin: 60px 0px;">',
-      '<p>Hello,', firstName, '</p>',
       '<p>Thanks for purchasing a gift card with us. ',
         shipping_greeting,
       '</p>',
