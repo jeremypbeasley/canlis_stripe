@@ -3,6 +3,7 @@
 require('dotenv').config()
 const keyPublishable = process.env.keyPublishable;
 const keySecret = process.env.keySecret;
+const productId = process.env.productId;
 const express = require('express')
 const app = express()
 const stripe = require("stripe")(keySecret);
@@ -72,7 +73,7 @@ function chooseSku(form, skuList, callback) {
   } else {
     // make a new sku
     stripe.skus.create({
-      product: form.productId,
+      product: productId,
       attributes: {
         'loadedamount': form.stripeAmount
       },
@@ -245,14 +246,14 @@ let transporter = nodemailer.createTransport({
 // Setup email data
 function sendReceipt(order, charge) {
   // Shortens full name to first name
-  function getFirstName(str) {
-    if (str.indexOf(' ') === -1) {
-      return str;
-    } else {
-      return str.substr(0, str.indexOf(' '));
-    }
-  };
-  var firstName = getFirstName(order.metadata.customer_name) + ".";
+  // function getFirstName(str) {
+  //   if (str.indexOf(' ') === -1) {
+  //     return str;
+  //   } else {
+  //     return str.substr(0, str.indexOf(' '));
+  //   }
+  // };
+  // var firstName = getFirstName(order.metadata.customer_name) + ".";
   var date = new Date("January 25, 2015");
   var charge_amount = (order.items[0].amount / 100).toFixed(2);
   var charge_shipping = ( function() {
@@ -279,7 +280,7 @@ function sendReceipt(order, charge) {
       return 'We&#39;ll be shipping it to you in 1-2 business days.';
     }
     if (order.metadata.shipping_preference == "recipient") {
-      return 'We&#39;ll be shipping it to ' + getFirstName(order.metadata.recipient_name) + ' in 1-2 business days.';
+      return 'We&#39;ll be shipping it to out in 1-2 business days.';
     }
   }) ();
   let shippingContent = [
