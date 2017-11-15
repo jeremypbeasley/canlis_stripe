@@ -271,7 +271,7 @@ function sendReceipt(order, charge) {
       return 'We&#39;ll be shipping it to you in 1-2 business days.';
     }
     if (order.metadata.shipping_preference == "recipient") {
-      return 'We&#39;ll be shipping it to out in 1-2 business days.';
+      return 'We&#39;ll be shipping it out in 1-2 business days.';
     }
   }) ();
   let shippingContent = [
