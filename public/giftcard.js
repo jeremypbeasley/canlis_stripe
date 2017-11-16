@@ -51,12 +51,12 @@ $( document ).ready(function() {
   $('.ShippingSelector').click(function() {
     if($('#ShipToMe').is(':checked')) {
       $(".ShippingInformation").show();
-      shippingCost = 4;
+      shippingCost = 5;
       showTotalCharge();
     }
     if ($('#ShipToRecipient').is(':checked')) {
       $(".ShippingInformation").show();
-      shippingCost = 4;
+      shippingCost = 5;
       showTotalCharge();
     }
     if ($('#ShipToPickup').is(':checked')) {
