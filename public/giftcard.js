@@ -2,25 +2,25 @@ $( document ).ready(function() {
 
   // TESTING ONLY: FORM AUTO FILL
 
-  // $('[name="customer_name"]').val("John Smith");
-  // $('[name="from_name"]').val("John Smith");
-  // $('[name="customer_phone"]').val("2064567890");
-  // $('[name="recipient_name"]').val("Jane Doe");
-  // $('[name="recipient_message"]').val("Just for being great and all.");
-  // $('#ShipToPickup').prop("checked", true);
-  // $('[name="shipping_address_line1"]').val("171 Lake Washington Blvd E");
+  // $('[name="customer_name"]').val("Jeremy Beasley");
+  // $('[name="from_name"]').val("Jeremy");
+  // $('[name="customer_phone"]').val("2065125877");
+  // $('[name="recipient_name"]').val("Jane");
+  // $('[name="recipient_message"]').val("Ignore this transaction. Testing.");
+  // $('#ShipToMe').prop("checked", true);
+  // $('[name="shipping_address_line1"]').val("828 26th Ave S.");
   // $('[name="shipping_address_line2"]').val("");
   // $('[name="shipping_address_city"]').val("Seattle");
   // $('[name="shipping_address_state"]').val("Washington");
   // $('[name="shipping_address_country"]').val("United States");
-  // $('[name="shipping_address_postal_code"]').val("98112");
+  // $('[name="shipping_address_postal_code"]').val("98144");
   // $('[name="stripeEmail"]').val("jeremy@bsley.com");
-  // $('#cc').val("4242424242424242");
-  // $('#ccm').val("12");
-  // $('#ccy').val("19");
-  // $('#cvv').val("123");
+  // $('#cc').val("4079413305630405");
+  // $('#ccm').val("09");
+  // $('#ccy').val("20");
+  // $('#cvv').val("550");
   // $('.FormItem').addClass("active");
-  // $('.InputGiftAmount').val("123");
+  // $('.InputGiftAmount').val("3");
 
   // Populates "You will be charged.." dialogue before submit button
 

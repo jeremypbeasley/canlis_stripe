@@ -28,7 +28,6 @@ app.get("/", (req, res) =>
 
 // Functions to perform transaction with Stripe
 function buyGiftCard(form, callback) {
-  //console.log(form);
   getSkuList((err, skuList) => {
     if (err) {}
     chooseSku(form, skuList, (err, chosenSku) => {
@@ -51,7 +50,7 @@ function buyGiftCard(form, callback) {
 
 function getSkuList(callback) {
   stripe.skus.list({
-    limit: 30
+    limit: 100
   }, function(err, skus) {
       if (err) {}
       callback(null, skus);
@@ -226,7 +225,7 @@ function mailchimpAddSub(order) {
     })
     .end(function(err, response) {
       if (response.status < 300 || (response.status === 400 && response.body.title === "Member Exists")) {
-        console.log('Mailchimp: Subscription sucessful.');
+        console.log('Mailchimp: Subscription successful.');
       } else {
         console.log('Mailchimp: Subscription failed.');
       }
