@@ -181,7 +181,7 @@ function applyShipping(form, order, callback) {
     orderTotal += order.shipping_methods.find(getFreeMethodId).amount;
   } else {
     function getNotFreeMethodId(method) {
-      return method.amount === 400;
+      return method.amount === 500;
     }
     var shippingId = order.shipping_methods.find(getNotFreeMethodId).id;
     orderTotal += order.shipping_methods.find(getNotFreeMethodId).amount;
@@ -248,7 +248,7 @@ function sendReceipt(order, charge) {
   var charge_amount = (order.items[0].amount / 100).toFixed(2);
   var charge_shipping = ( function() {
     if (order.metadata.shipping_preference !== "pickup") {
-      return '4.00';
+      return '5.00';
     } else {
       return '0.00';
     }
