@@ -16,7 +16,7 @@ mailchimpListId=XXXXX
 mailchimpDataCenter=us15
 googleAppsUsername=name@domain.com
 googleAppsPassword=XXXXX
-productId=prod_XXXXX`
+productId=prod_XXXXX
 ```
 
 2. On line `114` of `/public/giftcard.js` with the same key you used for `keyPublishable` in `.env`. Don't forget to change this back to the live keys when you deploy, otherwise you'll break the app in production.
