@@ -29,10 +29,6 @@ This app is hosted as `canlisgiftcard` on Heroku.com under `jeremy@jeremypbeasle
 
 It no longer deploys automatically from `master`.
 
-### Mailchimp
-
-The emails of purchasers of gift cards are automatically added to a list called "Gift Card Purchasers" on Canlis' Mailchimp account. Accessing this account will  be necessary to obtain the [credentials](https://us17.admin.mailchimp.com/account/api/) needed for the above mentioned `.env` file.
-
 ### Receipts
 
 Receipts are sent via Google Mail in the account designated in the `.env` file. The code for this email is in `/app.js`.
