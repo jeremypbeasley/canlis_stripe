@@ -103,7 +103,7 @@ $('#ShipToPickup').click(function() {
 
 // Note: this key must match what is in the .env file. See README.
 // todo: pull pull this from dotenv so there's one less place to change it
-Stripe.setPublishableKey('pk_test_qHOVbF8lzJGlNt53WAbNIGim');
+Stripe.setPublishableKey('pk_live_4kvjDESffDHa3yDxThoVTXUK');
 
 // Validating the form
 $("#payment-form").submit(function(event) {

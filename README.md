@@ -11,9 +11,6 @@ To run this app locally, you'll need to configure your environment with a few ke
 ```
 keyPublishable=pk_test_XXXXXXXXXXXX
 keySecret=sk_test_XXXXX
-mailchimpApiKey=XXXXX
-mailchimpListId=XXXXX
-mailchimpDataCenter=us15
 googleAppsUsername=name@domain.com
 googleAppsPassword=XXXXX
 productId=prod_XXXXX
@@ -34,3 +31,7 @@ It no longer deploys automatically from `master`.
 Receipts are sent via Google Mail in the account designated in the `.env` file. The code for this email is in `/app.js`.
 
 ### Testing
+
+Testing must be done in test mode. Docs here: https://stripe.com/docs/testing
+
+In order to quickly test, there are a series of autofill scripts at the head of `giftcard.js` that may be used. Just make sure these are commented out when deployed to production.
