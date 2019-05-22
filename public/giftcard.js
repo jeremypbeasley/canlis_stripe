@@ -183,7 +183,6 @@ $("#payment-form").submit(function(event) {
     errorPlacement: function(error, element) {
       if (element.is(":radio")) {
         error.prependTo(element.parents('.ShippingPreference'));
-        // error.append('#ShippingHeadline');
       }
       else {
         error.insertAfter(element);
