@@ -39,12 +39,12 @@ function buyGiftCard(form, callback) {
       if (err) {}
       createOrder(form, chosenSku, (err, order) => {
         if (err) {}
+        console.log(order);
         applyShipping(form, order, (err, orderTotal) => {
           if (err) {}
           payOrder(order, form, (err, order) => {
             if (err) {}
             callback(null, order);
-            mailchimpAddSub(order);
             sendReceipt(order, order);
           });
         });
@@ -105,6 +105,7 @@ function chooseSku(form, skuList, callback) {
 }
 
 // Stripe requires the creation of a "customer" to apply an "order".
+// Docs here: https://stripe.com/docs/api/customers/create
 function createCustomer(form, callback) {
   stripe.customers.create({
     email: form.stripeEmail,
@@ -189,12 +190,14 @@ function applyShipping(form, order, callback) {
   // Get the ids for free and standard shipping from the order object
   if (isFreeShipping) {
     function getFreeMethodId(method) {
+      // todo: change to search by description not amount
       return method.amount === 0;
     }
     var shippingId = order.shipping_methods.find(getFreeMethodId).id;
     orderTotal += order.shipping_methods.find(getFreeMethodId).amount;
   } else {
     function getNotFreeMethodId(method) {
+      // todo: change to search by description not amount
       return method.amount === 500;
     }
     var shippingId = order.shipping_methods.find(getNotFreeMethodId).id;
@@ -222,28 +225,6 @@ function payOrder(order, form, callback) {
   });
 }
 
-// Add customer to Mailchimp list
-function mailchimpAddSub(order) {
-  request
-    .post('https://' + process.env.mailchimpDataCenter + '.api.mailchimp.com/3.0/lists/' + process.env.mailchimpListId + '/members')
-    .set('Content-Type', 'application/json;charset=utf-8')
-    .set('Authorization', 'Basic ' + new Buffer('any:' + process.env.mailchimpApiKey ).toString('base64'))
-    .send({
-      'email_address': order.email,
-      'status': 'subscribed',
-      "merge_fields": {
-        "FNAME": order.metadata.customer_name,
-        "LNAME": "",
-      }
-    })
-    .end(function(err, response) {
-      if (response.status < 300 || (response.status === 400 && response.body.title === "Member Exists")) {
-        console.log('Mailchimp: Subscription successful.');
-      } else {
-        console.log('Mailchimp: Subscription failed.');
-      }
-    });
-};
 
 // Send a receipt
 let transporter = nodemailer.createTransport({
