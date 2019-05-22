@@ -1,39 +1,34 @@
 $( document ).ready(function() {
+  // TESTING ONLY - Form auto fill
+  $('[name="customer_name"]').val("Jeremy Beasley");
+  $('[name="from_name"]').val("Jeremy");
+  $('[name="customer_phone"]').val("2061234567");
+  $('[name="recipient_name"]').val("Jane");
+  $('[name="recipient_message"]').val("Ignore this transaction. Testing.");
+  $('#ShipToMe').prop("checked", true);
+  $('[name="shipping_address_line1"]').val("800 26th Ave S.");
+  $('[name="shipping_address_line2"]').val("");
+  $('[name="shipping_address_city"]').val("Seattle");
+  $('[name="shipping_address_state"]').val("Washington");
+  $('[name="shipping_address_country"]').val("United States");
+  $('[name="shipping_address_postal_code"]').val("98144");
+  $('[name="stripeEmail"]').val("jeremy@bsley.com");
+  $('#cc').val("4242424242424242");
+  $('#ccm').val("09");
+  $('#ccy').val("24");
+  $('#cvv').val("123");
+  $('.FormItem').addClass("active");
+  $('.InputGiftAmount').val("3");
 
-  // TESTING ONLY: FORM AUTO FILL
-
-  // $('[name="customer_name"]').val("Jeremy Beasley");
-  // $('[name="from_name"]').val("Jeremy");
-  // $('[name="customer_phone"]').val("2061234567");
-  // $('[name="recipient_name"]').val("Jane");
-  // $('[name="recipient_message"]').val("Ignore this transaction. Testing.");
-  // $('#ShipToMe').prop("checked", true);
-  // $('[name="shipping_address_line1"]').val("800 26th Ave S.");
-  // $('[name="shipping_address_line2"]').val("");
-  // $('[name="shipping_address_city"]').val("Seattle");
-  // $('[name="shipping_address_state"]').val("Washington");
-  // $('[name="shipping_address_country"]').val("United States");
-  // $('[name="shipping_address_postal_code"]').val("98144");
-  // $('[name="stripeEmail"]').val("jeremy@bsley.com");
-  // $('#cc').val("4242424242424242");
-  // $('#ccm').val("09");
-  // $('#ccy').val("24");
-  // $('#cvv').val("123");
-  // $('.FormItem').addClass("active");
-  // $('.InputGiftAmount').val("3");
-
-  // Populates "You will be charged.." dialogue before submit button
-
+  // "You will be charged.." Dialogue
   var shippingCost = 0;
   var enteredAmount;
-
   function showTotalCharge() {
     if (enteredAmount) {
       totalCharge = enteredAmount + shippingCost;
       $("#YouWillBeCharged").show().text("You will be charged a total of $" + totalCharge + ".00");
     }
   }
-
   $("#YouWillBeCharged").hide()
   $(".GiftAmount input").keyup(function() {
       enteredAmount = Number($(this).val());
@@ -44,10 +39,8 @@ $( document ).ready(function() {
       };
   }).keyup();
 
-  // SHIPPING INFO TOGGLE
-
+  // Shipping Info Toggle
   $(".ShippingInformation").hide();
-
   $('.ShippingSelector').click(function() {
     if($('#ShipToMe').is(':checked')) {
       $(".ShippingInformation").show();
@@ -66,8 +59,7 @@ $( document ).ready(function() {
     }
   });
 
-  // CLEVER ANIMATED INPUT FIELDS
-
+  // Input text field animations
   $('input.InputText').each(function() {
     $(this).on('focus', function() {
       $(this).parent('.FormItem').addClass('active');
@@ -82,13 +74,11 @@ $( document ).ready(function() {
     });
   });
 
-  // CLEVER ANIMATED SELECT FIELDS
-
+  // Select input animations
   $('.StateLabel').click(function() {
     $('.StateSelector select').focus();
     $('.StateSelector select').addClass("Active");
   });
-
   $('.StateSelector select').each(function() {
     $(this).on('focus', function() {
       $('.StateLabel').addClass("Active");
@@ -98,8 +88,8 @@ $( document ).ready(function() {
 
 });
 
-// ERASE ADDRESS AUTOCOMPLETE IF "PICK UP AT CANLIS" IS SELECTED
-
+// Erase address autocomplete if "Pick up at canlis" is selected
+// todo: include in ready.function above
 $('#ShipToPickup').click(function() {
   $('[name="shipping_address_line1"]').val("");
   $('[name="shipping_address_line2"]').val("");
@@ -109,12 +99,15 @@ $('#ShipToPickup').click(function() {
   $('[name="shipping_address_postal_code"]').val("");
 });
 
+// Form validation & error messages
 
-// FORM VALIDATION & ERROR MESSAGES
+// Note: this key must match what is in the .env file. See README.
+// todo: pull pull this from dotenv so there's one less place to change it
+Stripe.setPublishableKey('pk_test_qHOVbF8lzJGlNt53WAbNIGim');
 
-Stripe.setPublishableKey('pk_live_4kvjDESffDHa3yDxThoVTXUK');
-
+// Validating the form
 $("#payment-form").submit(function(event) {
+  // todo: pull jquert.validate from package, not static repo
   $("#payment-form").validate({
     rules: {
       stripeAmount: {
@@ -182,7 +175,6 @@ $("#payment-form").submit(function(event) {
       },
       shipping_address_state: {
         required: "Please select a state.",
-        // equals: "Please select a valid state."
       },
       shipping_address_postal_code: {
         required: "Please enter a valid ZIP code."
@@ -199,16 +191,15 @@ $("#payment-form").submit(function(event) {
     }
   });
   if(!$("#payment-form").valid()){
-    // console.log("aint valid");
+    // If there are errors, scroll up to see the error message
     $('body, html').animate({ scrollTop: 0 }, 200);
     event.preventDefault();
     return false;
   }
   if($("#payment-form").valid()){
-    // console.log("is valid");
-    // Disable the submit button to prevent repeated clicks:
+    // Disable the submit button to prevent repeated clicks
     $(this).find('.SubmitButton').prop('disabled', true);
-    // make the submit button spinning to show progress
+    // Make the submit button show progress
     $(this).find('.SubmitButton').addClass('Loading');
     // Request a token from Stripe:
     Stripe.card.createToken($("#payment-form"), stripeResponseHandler);
@@ -217,6 +208,7 @@ $("#payment-form").submit(function(event) {
   }
 });
 
+// Render any error visible at the top of the form
 function renderErrors(errorString) {
   $('body, html').animate({ scrollTop: 0 }, 200);
   $('.FormErrorsCont').show();
@@ -227,8 +219,7 @@ function renderErrors(errorString) {
   }, 400);
 }
 
-// SENDING FORM
-
+// Send the form
 function stripeResponseHandler(status, response) {
   var $form = $('#payment-form');
   if (response.error) {
@@ -238,6 +229,7 @@ function stripeResponseHandler(status, response) {
     var token = response.id;
     $form.append($('<input type="hidden" name="stripeToken">').val(token));
     console.log(token);
+    // todo: use promises instead of this timeout garbage
     setTimeout(function(){
       $('.SubmitButton').removeClass('Loading');
       $('.SubmitButton').addClass('Complete');

@@ -36,3 +36,5 @@ The emails of purchasers of gift cards are automatically added to a list called 
 ### Receipts
 
 Receipts are sent via Google Mail in the account designated in the `.env` file. The code for this email is in `/app.js`.
+
+### Testing
