@@ -1,13 +1,16 @@
-// Declare dependencies
+// Environment
+require('dotenv').config();
 
-require('dotenv').config()
+// Stripe
 const keyPublishable = process.env.keyPublishable;
 const keySecret = process.env.keySecret;
 const productId = process.env.productId;
-const express = require('express')
-const app = express()
 const stripe = require("stripe")(keySecret);
 stripe.setApiVersion('2017-02-14');
+
+// Tools
+const express = require('express')
+const app = express()
 const bodyParser = require('body-parser')
 const _ = require("lodash");
 const getJSON = require('get-json');
@@ -15,16 +18,18 @@ const request = require('superagent');
 const nodemailer = require('nodemailer');
 const moment = require('moment');
 
+// Settings
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(express.static('public'));
 app.set('view engine', 'ejs');
 
 // Initialize the app
-
 app.get("/", (req, res) =>
   res.render("index.ejs", {keyPublishable}));
   console.log('Listening at http://localhost:7000/')
+
+// todo: write in plain english what is happening here
 
 // Functions to perform transaction with Stripe
 function buyGiftCard(form, callback) {
@@ -34,12 +39,12 @@ function buyGiftCard(form, callback) {
       if (err) {}
       createOrder(form, chosenSku, (err, order) => {
         if (err) {}
+        console.log(order);
         applyShipping(form, order, (err, orderTotal) => {
           if (err) {}
           payOrder(order, form, (err, order) => {
             if (err) {}
             callback(null, order);
-            mailchimpAddSub(order);
             sendReceipt(order, order);
           });
         });
@@ -48,6 +53,12 @@ function buyGiftCard(form, callback) {
   });
 }
 
+// Note: A gift card is a "product" in Stripe. Stripe makes a new "sku" every
+// time a gift card is purchased with a new price. We have to check and see if
+// there is already a sku for the price the user has entered in the form. If so,
+// we use that existing sku. If not, we make a new one.
+
+// Get skus for existing products (looking for the gift card sku)
 function getSkuList(callback) {
   stripe.skus.list({
     limit: 100
@@ -58,25 +69,26 @@ function getSkuList(callback) {
   )
 }
 
+// Choose a sku from the list or make a new one
 function chooseSku(form, skuList, callback) {
-  // make a list of price-points that already exist for the gift card
+  // Make a list of price-points that already exist for the gift card
   var sortedskus = _.map(skuList.data, "price")
-  // see if the price we're trying to submit already exists
+  // See if the price we're trying to submit already exists
   if (sortedskus.includes(form.stripeAmount * 100)) {
     existingSku = _.filter(skuList.data, {
-      // since the form is submitting an integer, we must make it make "cents"
+      // Since the form is submitting an integer, we must make it make "cents"
       'price': form.stripeAmount * 100
     });
-    // use the existing sku
+    // Use the existing sku
     callback(null, existingSku[0].id);
   } else {
-    // make a new sku
+    // Make a new sku
     stripe.skus.create({
       product: productId,
       attributes: {
         'loadedamount': form.stripeAmount
       },
-      // since the form is submitting an integer, we must make it make "cents"
+      // Since the form is submitting an integer, we must make it make "cents"
       price: form.stripeAmount * 100,
       currency: 'usd',
       inventory: {
@@ -86,12 +98,14 @@ function chooseSku(form, skuList, callback) {
       if (err) {
         console.log(err);
       }
-      // use new sku
+      // Use the new sku
       callback(null, newSku.id);
     });
   }
 }
 
+// Stripe requires the creation of a "customer" to apply an "order".
+// Docs here: https://stripe.com/docs/api/customers/create
 function createCustomer(form, callback) {
   stripe.customers.create({
     email: form.stripeEmail,
@@ -108,23 +122,24 @@ function createCustomer(form, callback) {
 }
 
 function createOrder(form, chosenSku, callback) {
-  // fallback for optional message
+  // Fallback for optional message
   var recipient_message;
   if (!form.recipient_message) {
     recipient_message = "No message provided.";
   } else {
     recipient_message = form.recipient_message;
   }
-  // fallback for optional from name
+  // Fallback for optional from name
   var fromname;
   if (!form.from_name) {
     fromname = "None provided"
   } else {
     fromname = form.from_name;
   }
-  // fallback for optional second address line
+  // Fallback for optional second address line
   var addressline2;
   if (!form.shipping_address_line2) {
+    // Add empty string
     addressline2 = "";
   } else {
     addressline2 = form.shipping_address_line2;
@@ -146,7 +161,7 @@ function createOrder(form, chosenSku, callback) {
         postal_code: form.shipping_address_postal_code
       }
     },
-    // we throw in some information as meta data so it can easily be seen from the Stripe dashboard at https://dashboard.stripe.com/orders without clicking on the customer
+    // We throw in some information as meta data so it can easily be seen from the Stripe dashboard at https://dashboard.stripe.com/orders without clicking on the customer
     metadata: {
       card_id: "Not assigned yet",
       shipping_preference: form.shipping_preference,
@@ -172,15 +187,17 @@ function applyShipping(form, order, callback) {
   } else {
     isFreeShipping = false;
   }
-  // get the ids for free and standard shipping from the order object
+  // Get the ids for free and standard shipping from the order object
   if (isFreeShipping) {
     function getFreeMethodId(method) {
+      // todo: change to search by description not amount
       return method.amount === 0;
     }
     var shippingId = order.shipping_methods.find(getFreeMethodId).id;
     orderTotal += order.shipping_methods.find(getFreeMethodId).amount;
   } else {
     function getNotFreeMethodId(method) {
+      // todo: change to search by description not amount
       return method.amount === 500;
     }
     var shippingId = order.shipping_methods.find(getNotFreeMethodId).id;
@@ -208,38 +225,14 @@ function payOrder(order, form, callback) {
   });
 }
 
-// Add to Mailchimp
-
-function mailchimpAddSub(order) {
-  request
-    .post('https://' + process.env.mailchimpDataCenter + '.api.mailchimp.com/3.0/lists/' + process.env.mailchimpListId + '/members')
-    .set('Content-Type', 'application/json;charset=utf-8')
-    .set('Authorization', 'Basic ' + new Buffer('any:' + process.env.mailchimpApiKey ).toString('base64'))
-    .send({
-      'email_address': order.email,
-      'status': 'subscribed',
-      "merge_fields": {
-        "FNAME": order.metadata.customer_name,
-        "LNAME": "",
-      }
-    })
-    .end(function(err, response) {
-      if (response.status < 300 || (response.status === 400 && response.body.title === "Member Exists")) {
-        console.log('Mailchimp: Subscription successful.');
-      } else {
-        console.log('Mailchimp: Subscription failed.');
-      }
-    });
-};
 
 // Send a receipt
-
 let transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: process.env.googleAppsUsername,
-        pass: process.env.googleAppsPassword
-    }
+  service: 'gmail',
+  auth: {
+    user: process.env.googleAppsUsername,
+    pass: process.env.googleAppsPassword
+  }
 });
 
 // Setup email data
