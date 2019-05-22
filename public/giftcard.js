@@ -6,6 +6,7 @@ $( document ).ready(function() {
   // $('[name="recipient_name"]').val("Jane");
   // $('[name="recipient_message"]').val("Ignore this transaction. Testing.");
   // $('#ShipToMe').prop("checked", true);
+  // $('[name="shipping_address_name"]').val("Jane Ellen Beasley");
   // $('[name="shipping_address_line1"]').val("800 26th Ave S.");
   // $('[name="shipping_address_line2"]').val("");
   // $('[name="shipping_address_city"]').val("Seattle");
@@ -169,6 +170,9 @@ $("#payment-form").submit(function(event) {
       },
       shipping_address_line1: {
         required: "Please enter a valid address."
+      },
+      shipping_address_name: {
+        required: "Please enter your recipient's name."
       },
       shipping_address_city: {
         required: "Please enter a valid city name."

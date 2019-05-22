@@ -152,7 +152,7 @@ function createOrder(form, chosenSku, callback) {
     currency: "usd",
     email: form.stripeEmail,
     shipping: {
-      name: form.recipient_name,
+      name: form.shipping_address_name,
       address: {
         line1: form.shipping_address_line1,
         line2: addressline2,
