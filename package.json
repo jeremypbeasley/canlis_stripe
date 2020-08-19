@@ -40,7 +40,7 @@
     "pify": "latest",
     "pug": "latest",
     "q": "^1.5.1",
-    "stripe": "latest",
+    "stripe": "8.88.0",
     "superagent": "latest"
   }
 }
