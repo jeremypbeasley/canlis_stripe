@@ -11,7 +11,7 @@
     "url": "idk"
   },
   "engines": {
-    "node": "6.9.1",
+    "node": "12.18.3",
     "npm": "4.1.1"
   },
   "keywords": [
