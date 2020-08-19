@@ -5,8 +5,7 @@ require('dotenv').config();
 const keyPublishable = process.env.keyPublishable;
 const keySecret = process.env.keySecret;
 const productId = process.env.productId;
-const stripe = require("stripe")(keySecret);
-stripe.setApiVersion('2017-02-14');
+const stripe = require("stripe")(keySecret, {apiVersion:'2020-03-02'});
 
 // Tools
 const express = require('express')
@@ -68,14 +67,25 @@ function buyGiftCard(form, callback) {
 // there is already a sku for the price the user has entered in the form. If so,
 // we use that existing sku. If not, we make a new one.
 
+// Loop through skus, given Stripe only returns up to 100
+async function getSkus(starting_after = null, result = []) {
+  const options = {
+    limit: 100,
+  }
+  if (starting_after) options.starting_after = starting_after
+  const skus = await stripe.skus.list(options);
+  result.push(skus)
+  if(skus.length === 100) {
+    return getSkus(skus[skus.length-1].data.id, result);
+  }
+  return result
+}
+
 // Get skus for existing products (looking for the gift card sku)
-function getSkuList(callback) {
-  stripe.skus.list({
-  }, function(err, skus) {
-      if (err) {}
-      callback(null, skus);
-    }
-  )
+async function getSkuList(callback) {
+  let skus = await getSkus();
+  console.log(skus)
+  callback(null, skus)
 }
 
 // Choose a sku from the list or make a new one
