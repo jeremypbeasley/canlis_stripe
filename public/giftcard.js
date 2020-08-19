@@ -19,7 +19,7 @@ $( document ).ready(function() {
   // $('#ccy').val("24");
   // $('#cvv').val("123");
   // $('.FormItem').addClass("active");
-  // $('.InputGiftAmount').val("3");
+  // $('.InputGiftAmount').val("10");
 
   // "You will be charged.." Dialogue
   var shippingCost = 0;
