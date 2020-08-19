@@ -34,16 +34,26 @@ app.get("/", (req, res) =>
 // Functions to perform transaction with Stripe
 function buyGiftCard(form, callback) {
   getSkuList((err, skuList) => {
-    if (err) {}
+    if (err) {
+      console.log("FAIL: getSkuList ", err )
+    }
     chooseSku(form, skuList, (err, chosenSku) => {
-      if (err) {}
+      if (err) {
+        console.log("FAIL: chooseSku ", err )
+      }
       createOrder(form, chosenSku, (err, order) => {
-        if (err) {}
+        if (err) {
+          console.log("FAIL: createOrder ", err )
+        }
         console.log(order);
         applyShipping(form, order, (err, orderTotal) => {
-          if (err) {}
+          if (err) {
+            console.log("FAIL: applyShipping ", err )
+          }
           payOrder(order, form, (err, order) => {
-            if (err) {}
+            if (err) {
+              console.log("FAIL: payOrder ", err )
+            }
             callback(null, order);
             sendReceipt(order, order);
           });
