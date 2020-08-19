@@ -44,7 +44,7 @@ function buyGiftCard(form, callback) {
         if (err) {
           console.log("FAIL: createOrder ", err )
         }
-        console.log(order);
+        // console.log(order);
         applyShipping(form, order, (err, orderTotal) => {
           if (err) {
             console.log("FAIL: applyShipping ", err )
@@ -84,7 +84,7 @@ async function getSkus(starting_after = null, result = []) {
 // Get skus for existing products (looking for the gift card sku)
 async function getSkuList(callback) {
   let skus = await getSkus();
-  console.log(skus)
+  // console.log(skus)
   callback(null, skus)
 }
 
@@ -419,7 +419,7 @@ function sendReceipt(order, charge) {
     if (error) {
         return console.log(error);
     }
-    console.log('Email receipt %s sent: %s', info.messageId, info.response);
+    // console.log('Email receipt %s sent: %s', info.messageId, info.response);
   });
 };
 
