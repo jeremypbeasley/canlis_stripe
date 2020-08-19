@@ -1,25 +1,25 @@
 $( document ).ready(function() {
   // TESTING ONLY - Form auto fill
-  $('[name="customer_name"]').val("Jeremy Beasley");
-  $('[name="from_name"]').val("Jeremy");
-  $('[name="customer_phone"]').val("2061234567");
-  $('[name="recipient_name"]').val("Jane");
-  $('[name="recipient_message"]').val("Ignore this transaction. Testing.");
-  $('#ShipToMe').prop("checked", true);
-  $('[name="shipping_address_name"]').val("Jane Ellen Beasley");
-  $('[name="shipping_address_line1"]').val("800 26th Ave S.");
-  $('[name="shipping_address_line2"]').val("");
-  $('[name="shipping_address_city"]').val("Seattle");
-  $('[name="shipping_address_state"]').val("Washington");
-  $('[name="shipping_address_country"]').val("United States");
-  $('[name="shipping_address_postal_code"]').val("98144");
-  $('[name="stripeEmail"]').val("jeremy@bsley.com");
-  $('#cc').val("4242424242424242");
-  $('#ccm').val("09");
-  $('#ccy').val("24");
-  $('#cvv').val("123");
-  $('.FormItem').addClass("active");
-  $('.InputGiftAmount').val("10");
+  // $('[name="customer_name"]').val("Jeremy Beasley");
+  // $('[name="from_name"]').val("Jeremy");
+  // $('[name="customer_phone"]').val("2061234567");
+  // $('[name="recipient_name"]').val("Jane");
+  // $('[name="recipient_message"]').val("Ignore this transaction. Testing.");
+  // $('#ShipToMe').prop("checked", true);
+  // $('[name="shipping_address_name"]').val("Jane Ellen Beasley");
+  // $('[name="shipping_address_line1"]').val("800 26th Ave S.");
+  // $('[name="shipping_address_line2"]').val("");
+  // $('[name="shipping_address_city"]').val("Seattle");
+  // $('[name="shipping_address_state"]').val("Washington");
+  // $('[name="shipping_address_country"]').val("United States");
+  // $('[name="shipping_address_postal_code"]').val("98144");
+  // $('[name="stripeEmail"]').val("jeremy@bsley.com");
+  // $('#cc').val("4242424242424242");
+  // $('#ccm').val("09");
+  // $('#ccy').val("24");
+  // $('#cvv').val("123");
+  // $('.FormItem').addClass("active");
+  // $('.InputGiftAmount').val("10");
 
   // "You will be charged.." Dialogue
   var shippingCost = 0;
@@ -104,7 +104,7 @@ $('#ShipToPickup').click(function() {
 
 // Note: this key must match what is in the .env file. See README.
 // todo: pull pull this from dotenv so there's one less place to change it
-Stripe.setPublishableKey('pk_test_qHOVbF8lzJGlNt53WAbNIGim');
+Stripe.setPublishableKey('pk_live_4kvjDESffDHa3yDxThoVTXUK');
 
 // Validating the form
 $("#payment-form").submit(function(event) {
