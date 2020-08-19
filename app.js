@@ -71,7 +71,6 @@ function buyGiftCard(form, callback) {
 // Get skus for existing products (looking for the gift card sku)
 function getSkuList(callback) {
   stripe.skus.list({
-    limit: 100
   }, function(err, skus) {
       if (err) {}
       callback(null, skus);
