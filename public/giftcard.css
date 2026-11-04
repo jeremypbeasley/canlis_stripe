@@ -234,10 +234,10 @@ input[type=radio]:checked ~ label{
   outline: none;
 }
 .StateSelector select.Default {
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.2rem;
-  font-family: "ApercuMono", Andale Mono, monospaced;
+  /* font-size: 11px; */
+  /* text-transform: uppercase; */
+  /* letter-spacing: 0.2rem; */
+  /* font-family: "ApercuMono", Andale Mono, monospaced; */
 }
 .StateSelector select.Active {
   opacity: 1;
