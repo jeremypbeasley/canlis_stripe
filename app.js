@@ -26,7 +26,7 @@ app.set('view engine', 'ejs');
 // Initialize the app
 app.get("/", (req, res) =>
   res.render("index.ejs", {keyPublishable}));
-  console.log('Listening at http://localhost:7000/')
+  console.log('Listening at http://localhost:9000/')
 
 // todo: write in plain english what is happening here
 
@@ -433,4 +433,4 @@ app.post('/thanks', function (req, res) {
 })
 
 // Listening
-app.listen(process.env.PORT || 7000);
+app.listen(process.env.PORT || 9000);
